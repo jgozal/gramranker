@@ -1,28 +1,73 @@
-//Load packages
+var importTopAccounts = function() {
 
-var fs = require('fs');
-var request = require('sync-request');
+    //Load packages
+    var fs = require('fs');
+    var request = require('sync-request');
+    var cheerio = require("cheerio");
 
-// Reads text file with URL, gets rid of invisible characters, and converts to array
-var urlArray = (fs.readFileSync('url-array', 'utf8')).replace(/\r?\n|\r/g, '').split(',');
+    // Reads text file with URL, gets rid of invisible characters, and converts to array
+    var urlArray = (fs.readFileSync('url-array', 'utf8')).replace(/\r?\n|\r/g, '').split(',');
 
-// Array containing all account info
-var topAccountsArray = [];
+    // Array containing all account info
+    var topAccountsArray = [];
 
-// Call Import.io API for every url in urlArray and push all data into topAccountsArray
+    // Run scraper for each url
 
-urlArray.forEach(function(url) {
-    var res = request('GET', 'https://api.import.io/store/connector/094ba3f9-1016-4563-b32c-8bb9186b38b0/_query?input=webpage/url:' + encodeURI(url) + '&&_apikey=eb785e83e877471b84615d76a4bed5e632ddbe443e47242a2218c2b49ce75d3fac95f4c822b930541b56c860a9374df149563e2c358927cf56cd3fadf42b152945036080719c107f7ec38ba203dcaf04');
+    urlArray.forEach(function(url) {
 
-    var topAccounts = (JSON.parse(res.getBody().toString()).results);
+        var parseHtml = function(html) {
+            $ = cheerio.load(html)
 
-    topAccountsArray = topAccountsArray.concat(topAccounts.map(function(account) {
-        return {
-            account: account["link_2/_text"],
-            followers: account["followers_number"],
-            media: account["media_number"]
+            var accounts = [];
+
+            // Grab account values
+
+            $('#username a').each(function(i, elem) {
+                accounts[i] = { account: $(this).text() };
+            });
+
+            // Grab follower values
+
+            var followersCounter = 0;
+            $('td').each(function(i, elem) {
+                var text = $(this).text();
+                if (text.includes('Followers')) {
+                    var value = parseInt(text.replace('Followers', '').replace(/,/g, ''))
+                    if (!isNaN(value)) {
+                        accounts[followersCounter].followers = value;
+                        followersCounter++;
+                    }
+
+                }
+            });
+
+            // Grab media values
+
+            var mediaCounter = 0;
+            $('td').each(function(i, elem) {
+                var text = $(this).text();
+                if (text.includes('Media')) {
+                    var value = parseInt(text.replace('Media', '').replace(/,/g, ''))
+                    if (!isNaN(value)) {
+                        accounts[mediaCounter].media = value;
+                        mediaCounter++;
+                    }
+
+                }
+            });
+
+            accounts.join(', ');
+            topAccountsArray = topAccountsArray.concat(accounts);
         };
-    }))
-})
 
-console.log(topAccountsArray)
+        var res = request('GET', url);
+        parseHtml(res.getBody());
+
+    })
+
+    console.log(topAccountsArray);
+    //fs.writeFile("./top-accounts-array.txt", topAccountsArray);
+
+}
+
+importTopAccounts();
