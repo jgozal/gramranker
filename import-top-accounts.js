@@ -1,3 +1,5 @@
+var start = new Date().getTime();
+
 var importTopAccounts = function() {
 
     //Load packages
@@ -21,13 +23,28 @@ var importTopAccounts = function() {
             var accounts = [];
 
             // Grab account values
-
             $('#username a').each(function(i, elem) {
                 accounts[i] = { account: $(this).text() };
             });
 
-            // Grab follower values
+            // Grab account id
+            var idCounter = 0;
+            accounts.forEach(function(account) {
 
+                try {
+                    var res = request('GET', 'https://www.instagram.com/' + (account.account).toString() + '/?__a=1');
+                    var id = parseInt(JSON.parse(res.getBody().toString()).user.id);
+                    accounts[idCounter].id = (!isNaN(id)) ? id : null;
+                    idCounter++;
+
+                } catch (e) {
+                    accounts[idCounter].id = null;
+                    idCounter++;
+                }
+
+            })
+
+            // Grab follower values
             var followersCounter = 0;
             $('td').each(function(i, elem) {
                 var text = $(this).text();
@@ -42,7 +59,6 @@ var importTopAccounts = function() {
             });
 
             // Grab media values
-
             var mediaCounter = 0;
             $('td').each(function(i, elem) {
                 var text = $(this).text();
@@ -63,11 +79,19 @@ var importTopAccounts = function() {
         var res = request('GET', url);
         parseHtml(res.getBody());
 
+
     })
 
-    console.log(topAccountsArray);
-    //fs.writeFile("./top-accounts-array.txt", topAccountsArray);
+    // Write full array of top accounts to file   
+    fs.writeFile("./top-accounts-array", JSON.stringify(topAccountsArray));
 
 }
 
 importTopAccounts();
+
+
+var end = new Date().getTime();
+var time = end - start;
+console.log('Execution time: ' + time);
+
+

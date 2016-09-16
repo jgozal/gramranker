@@ -2,12 +2,13 @@
   "name"         : "dankest-media-instagram",
   "version"      : "0.0.1",
   "description"  : "dankest-media-instagram",
-  "main"         : "server.js",
+  "main"         : "app.js",
   "author"       : "jg",
   "dependencies" : {
     "sync-request"    : "latest",
     "connect"    : "latest",
     "serve-static": "latest",
-    "cheerio": "latest"
+    "cheerio": "latest",
+    "instagram-node" : "latest"
   }
 }
