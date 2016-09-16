@@ -1,5 +1,3 @@
-var start = new Date().getTime();
-
 var importTopAccounts = function() {
 
     //Load packages
@@ -88,10 +86,5 @@ var importTopAccounts = function() {
 }
 
 importTopAccounts();
-
-
-var end = new Date().getTime();
-var time = end - start;
-console.log('Execution time: ' + time);
 
 
