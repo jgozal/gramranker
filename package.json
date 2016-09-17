@@ -8,7 +8,6 @@
     "sync-request"    : "latest",
     "connect"    : "latest",
     "serve-static": "latest",
-    "cheerio": "latest",
-    "instagram-node" : "latest"
+    "cheerio": "latest"
   }
 }
