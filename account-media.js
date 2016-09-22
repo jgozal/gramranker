@@ -1,9 +1,9 @@
 var fs = require('fs');
 var request = require('sync-request');
 
-var now = new Date();
-var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-var unixTimestamp = startOfDay / 1000;
+var now = new Date(),
+    startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+    unixTimestamp = startOfDay / 1000;
 
 var fullArr = [];
 

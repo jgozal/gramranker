@@ -1,13 +1,11 @@
 {
-  "name"         : "dankest-media-instagram",
+  "name"         : "dailygram",
   "version"      : "0.0.1",
-  "description"  : "dankest-media-instagram",
-  "main"         : "app.js",
+  "description"  : "dailygram",
+  "main"         : "server.js",
   "author"       : "jg",
   "dependencies" : {
-    "sync-request"    : "latest",
-    "connect"    : "latest",
-    "serve-static": "latest",
+    "sync-request": "latest",
     "cheerio": "latest"
   }
 }
