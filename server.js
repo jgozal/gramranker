@@ -12,8 +12,8 @@ http.createServer(function(request, response) {
   });
   if (request.method === 'GET' && request.url === '/') {
     request.pipe(response);
-    var file = fs.readFileSync('./index.html', 'utf8')
-    response.end(file, "utf-8");      
+    var index = fs.readFileSync('./index.html', 'utf8')
+    response.end(index, "utf-8");      
   } else {
     response.statusCode = 404;
     response.end();
