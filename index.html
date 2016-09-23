@@ -1,15 +1,38 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Top12grams</title>
-    <meta name="viewport" content="width=device-width">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <p>Hello World!</p> 
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <title>Top12grams</title>
+  <meta name="viewport" content="width=device-width">
+
+</head>
+
+<body>
+  <p>Hello World!</p>
+</body>
+
+<script> 
+
+  var fullArr;
+
+   xmlhttp = new XMLHttpRequest();
+   xmlhttp.open("GET","http://localhost:8080/data", false);
+   xmlhttp.onreadystatechange=function(){
+         if (xmlhttp.readyState==4 && xmlhttp.status==200){
+          fullArr = (eval(JSON.parse(xmlhttp.responseText)));
+          
+         }
+   }
+   xmlhttp.send();
+
+   fullArr.forEach(function(account){
+            console.log(account)
+            })
+   
+
+   
+  </script>
+
 </html>
