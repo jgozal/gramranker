@@ -6,7 +6,7 @@ http.createServer(function (req, res) {
   if (req.method === 'GET' && req.url === '/') {
 
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    fs.readFile('index.html', 'utf-8', function (err, file) {
+    fs.readFile('./index.html', 'utf-8', function (err, file) {
       if (err) {
         res.end('something went wrong.');
         return;
@@ -17,12 +17,12 @@ http.createServer(function (req, res) {
 
   if (req.method === 'GET' && req.url === '/data') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    fs.readFile('top-accounts-array', 'utf-8', function (err, file) {
+    fs.readFile('./top-media/top-media-array - 23', 'utf-8', function (err, file) {
       if (err) {
         res.end('something went wrong.');
         return;
       }
-      res.end(JSON.stringify(file), 'utf-8');
+      res.end(JSON.stringify(eval(JSON.parse(file)).slice(0,12)), 'utf-8'); //Only send first 12 objects
     });
   }
 
