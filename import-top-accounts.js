@@ -6,7 +6,7 @@ var importTopAccounts = function () {
     var cheerio = require("cheerio");
 
     // Reads text file with URL, gets rid of invisible characters, and converts to array
-    var urlArray = (fs.readFileSync('url-array', 'utf8')).replace(/\r?\n|\r/g, '').split(',');
+    var urlArray = (fs.readFileSync('./data/url-array', 'utf8')).replace(/\r?\n|\r/g, '').split(',');
 
     // Array containing all account info
     var topAccountsArray = [];
@@ -25,6 +25,8 @@ var importTopAccounts = function () {
                 accounts[i] = { account: $(this).text() };
             });
 
+            /*
+            // If one day all mighty Instagram grants us access to public_content permissions, we might be able to use this...
             // Grab account id
             var idCounter = 0;
             accounts.forEach(function (account) {
@@ -41,6 +43,7 @@ var importTopAccounts = function () {
                 }
 
             })
+            */
 
             // Grab follower values
             var followersCounter = 0;
@@ -93,7 +96,7 @@ var importTopAccounts = function () {
     })
 
     // Write full array of top accounts to file   
-    fs.writeFile("./top-accounts-array", JSON.stringify(topAccountsArray));
+    fs.writeFile("./data/top-accounts-array", JSON.stringify(topAccountsArray));
 
 }
 

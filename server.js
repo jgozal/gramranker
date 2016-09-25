@@ -1,34 +1,22 @@
-var http = require('http');
 var fs = require('fs');
+var path = require('path');
+var express = require('express');
 
-http.createServer(function (req, res) {
+var app = express();
 
-  if (req.method === 'GET' && req.url === '/') {
+var staticPath = path.join(__dirname, '/public');
+app.use(express.static(staticPath));
 
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    fs.readFile('./index.html', 'utf-8', function (err, file) {
-      if (err) {
-        res.end('something went wrong.');
-        return;
-      }
-      res.end(file);
-    });
-  }
+app.get('/data', function (req, res) {
+  fs.readFile('./data/top-media-array', 'utf-8', function (err, file) {
+    if (err) {
+      res.send('something went wrong.');
+      return;
+    }
+    res.send(JSON.stringify(eval(JSON.parse(file)).slice(0, 12)));
+  });
+});
 
-  if (req.method === 'GET' && req.url === '/data') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    fs.readFile('./top-media-array', 'utf-8', function (err, file) {
-      if (err) {
-        res.end('something went wrong.');
-        return;
-      }
-      res.end(JSON.stringify(eval(JSON.parse(file)).slice(0,12)), 'utf-8'); //Only send first 12 objects
-    });
-  }
-
-
-
-}).listen(8080);
-console.log("Server running on port 8080.")
-
-
+app.listen(8080, function () {
+  console.log('Server running on port 8080.');
+});

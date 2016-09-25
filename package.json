@@ -6,6 +6,7 @@
   "author"       : "jg",
   "dependencies" : {
     "sync-request": "latest",
-    "cheerio": "latest"
+    "cheerio": "latest",
+    "express": "latest"
   }
 }

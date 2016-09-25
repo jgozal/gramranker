@@ -10,7 +10,7 @@ var finalArr = [];
 
 // Read full array of top accounts
 
-var topAccountsArray = JSON.parse(fs.readFileSync('top-accounts-array', 'utf8'));
+var topAccountsArray = JSON.parse(fs.readFileSync('./data/top-accounts-array', 'utf8'));
 
 var getData = function (user) {
     var res = request('GET', 'https://www.instagram.com/' + user + '/media/');
@@ -70,5 +70,5 @@ finalArr.sort(function (obj1, obj2) {
     return obj2.engagement - obj1.engagement;
 });
 
-fs.writeFile("./top-media-array", JSON.stringify(finalArr));
+fs.writeFile("./data/top-media-array", JSON.stringify(finalArr));
 
