@@ -4,13 +4,13 @@
    
    .headcontainer {
     text-align: center;
-    padding: 4.5rem;
+    padding: 3.5rem;
     margin-left: auto;
     margin-right: auto;
     color: white; 
   }
   
-  .master {
+  .style {
     padding-top: 1rem;
     padding-bottom: 1rem;
     background-color: #2b4170; 
@@ -20,14 +20,38 @@
     border: 1px solid #2b4170;
     text-shadow: 0 -1px -1px #1f2f52;
   }
+
+  .row{
+    max-width: 85%;
+  }
+
+  .top1000{
+    position: absolute;
+    right:0;
+    max-width: 40%;
+    padding:50px; 
+  }
+
+  #prov{
+    font-size: 2.5em;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    }
   
   .thumbnail {
-    margin: 0;
-    height: 265px;
+    margin: 5px;
+    height: auto; 
+    border: white; 
   }
   
   .overlay {
-    background: black;
+    background-color: black; 
     margin: -1px;
     border-radius: 4px;
   }
@@ -41,11 +65,13 @@
     text-align: center;
     visibility:hidden;
     color: white;
-    font-size: 18px;
+    font-size: 1.2em;
+    max-width: 100%;
   }
 
   .overlay:hover .text_overlay{
     visibility:visible;
+    
   }
   
   video,
@@ -53,11 +79,21 @@
     width: 100%;
     height: auto;
     max-height: 100%;
+    display: block;
   }
   
   img:hover,
   video:hover {
     opacity: 0.3;
+  }
+
+  .glyphicon {
+  padding-left:0.3em;
+  padding-right: 0.1em; 
+  }
+
+  footer{
+    height: 80px;
   }
 
  

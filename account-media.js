@@ -51,6 +51,7 @@ fullArr.sort(function (obj1, obj2) {
     return obj2.engagement - obj1.engagement;
 });
 
+fs.writeFile("./data/top-media-array-1000grams", JSON.stringify(fullArr));
 
 // Second round for accuracy
 
@@ -70,5 +71,5 @@ finalArr.sort(function (obj1, obj2) {
     return obj2.engagement - obj1.engagement;
 });
 
-fs.writeFile("./data/top-media-array", JSON.stringify(finalArr));
+fs.writeFile("./data/top-media-array-12grams", JSON.stringify(finalArr));
 
