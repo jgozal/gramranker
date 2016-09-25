@@ -1,15 +1,17 @@
 var importTopAccounts = function () {
 
-    //Load packages
+    // Load packages
     var fs = require('fs');
     var request = require('sync-request');
     var cheerio = require("cheerio");
 
-    // Reads text file with URL, gets rid of invisible characters, and converts to array
-    var urlArray = (fs.readFileSync('./data/url-array', 'utf8')).replace(/\r?\n|\r/g, '').split(',');
-
-    // Array containing all account info
+    var urlArray = [];
     var topAccountsArray = [];
+   
+   // Build urlArray   
+    for(var i = 1; i <= 99; i++){
+        urlArray.push('http://zymanga.com/millionplus/' + i.toString() + 'f')
+    }
 
     // Run scraper for each url
 
