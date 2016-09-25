@@ -1,6 +1,5 @@
    body {
     font-family: 'Fira Sans', sans-serif;
-    font-weight: bold;
    }
    
    .headcontainer {
@@ -8,8 +7,7 @@
     padding: 4.5rem;
     margin-left: auto;
     margin-right: auto;
-    color: white;
-    
+    color: white; 
   }
   
   .master {
@@ -21,15 +19,33 @@
     background: -webkit-linear-gradient(top, #3b5998, #2b4170);
     border: 1px solid #2b4170;
     text-shadow: 0 -1px -1px #1f2f52;
-    }
-    .thumbnail {
-    margin-bottom: 7px;
+  }
+  
+  .thumbnail {
+    margin: 0;
     height: 265px;
   }
   
   .overlay {
     background: black;
     margin: -1px;
+    border-radius: 4px;
+  }
+
+  .overlay .text_overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    visibility:hidden;
+    color: white;
+    font-size: 18px;
+  }
+
+  .overlay:hover .text_overlay{
+    visibility:visible;
   }
   
   video,
@@ -41,5 +57,7 @@
   
   img:hover,
   video:hover {
-    opacity: 0.5;
+    opacity: 0.3;
   }
+
+ 
