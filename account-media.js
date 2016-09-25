@@ -70,7 +70,5 @@ finalArr.sort(function (obj1, obj2) {
     return obj2.engagement - obj1.engagement;
 });
 
-console.log(finalArr);
-
 fs.writeFile("./top-media-array", JSON.stringify(finalArr));
 

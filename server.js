@@ -17,7 +17,7 @@ http.createServer(function (req, res) {
 
   if (req.method === 'GET' && req.url === '/data') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    fs.readFile('./top-media/top-media-array - 23', 'utf-8', function (err, file) {
+    fs.readFile('./top-media-array', 'utf-8', function (err, file) {
       if (err) {
         res.end('something went wrong.');
         return;

@@ -1,4 +1,4 @@
-var importTopAccounts = function() {
+var importTopAccounts = function () {
 
     //Load packages
     var fs = require('fs');
@@ -13,21 +13,21 @@ var importTopAccounts = function() {
 
     // Run scraper for each url
 
-    urlArray.forEach(function(url) {
+    urlArray.forEach(function (url) {
 
-        var parseHtml = function(html) {
+        var parseHtml = function (html) {
             $ = cheerio.load(html)
 
             var accounts = [];
 
             // Grab account values
-            $('#username a').each(function(i, elem) {
+            $('#username a').each(function (i, elem) {
                 accounts[i] = { account: $(this).text() };
             });
 
             // Grab account id
             var idCounter = 0;
-            accounts.forEach(function(account) {
+            accounts.forEach(function (account) {
 
                 try {
                     var res = request('GET', 'https://www.instagram.com/' + (account.account).toString() + '/?__a=1');
@@ -44,29 +44,41 @@ var importTopAccounts = function() {
 
             // Grab follower values
             var followersCounter = 0;
-            $('td').each(function(i, elem) {
-                var text = $(this).text();
-                if (text.includes('Followers')) {
-                    var value = parseInt(text.replace('Followers', '').replace(/,/g, ''))
-                    if (!isNaN(value)) {
-                        accounts[followersCounter].followers = value;
-                        followersCounter++;
-                    }
+            $('td').each(function (i, elem) {
+                try {
+                    var text = $(this).text();
+                    if (text.includes('Followers')) {
+                        var value = parseInt(text.replace('Followers', '').replace(/,/g, ''))
+                        if (!isNaN(value)) {
+                            accounts[followersCounter].followers = value;
+                            followersCounter++;
+                        }
 
+                    }
+                } catch (e) {
+                    console.log(e)
+                    accounts[followersCounter].followers = null;
+                    followersCounter++;
                 }
             });
 
             // Grab media values
             var mediaCounter = 0;
-            $('td').each(function(i, elem) {
-                var text = $(this).text();
-                if (text.includes('Media')) {
-                    var value = parseInt(text.replace('Media', '').replace(/,/g, ''))
-                    if (!isNaN(value)) {
-                        accounts[mediaCounter].media = value;
-                        mediaCounter++;
-                    }
+            $('td').each(function (i, elem) {
+                try {
+                    var text = $(this).text();
+                    if (text.includes('Media')) {
+                        var value = parseInt(text.replace('Media', '').replace(/,/g, ''))
+                        if (!isNaN(value)) {
+                            accounts[mediaCounter].media = value;
+                            mediaCounter++;
+                        }
 
+                    }
+                } catch (e) {
+                    console.log(e)
+                    accounts[mediaCounter].media = null;
+                    mediaCounter++;
                 }
             });
 
