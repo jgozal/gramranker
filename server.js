@@ -8,7 +8,7 @@ var staticPath = path.join(__dirname, '/public');
 app.use(express.static(staticPath));
 
 app.get('/data', function (req, res) {
-  fs.readFile('./data/top-media-array', 'utf-8', function (err, file) {
+  fs.readFile('./data/top-media-array-12grams', 'utf-8', function (err, file) {
     if (err) {
       res.send('something went wrong.');
       return;

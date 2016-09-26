@@ -44,6 +44,7 @@ topAccountsArray.forEach(function (user) {
         fullArr = fullArr.concat(getData(user.account));
     } catch (e) {
         console.log(e);
+        console.log(user);
     }
 })
 
@@ -64,6 +65,7 @@ fullArr.slice(0,50).map(function(media){
        finalArr = finalArr.concat(getData(user));
     } catch (e) {
        console.log(e);
+       console.log(user);
     }
 })
 
