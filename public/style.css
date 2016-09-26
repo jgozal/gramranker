@@ -1,16 +1,9 @@
-   body {
+  body {
     font-family: 'Fira Sans', sans-serif;
-   }
-   
-   .headcontainer {
-    text-align: center;
-    padding: 3.5rem;
-    margin-left: auto;
-    margin-right: auto;
-    color: white; 
   }
   
-  .style {
+  .master {
+    display: flex;
     padding-top: 1rem;
     padding-bottom: 1rem;
     background-color: #2b4170; 
@@ -20,80 +13,85 @@
     border: 1px solid #2b4170;
     text-shadow: 0 -1px -1px #1f2f52;
   }
-
-  .row{
-    max-width: 85%;
+     
+  .header-content {
+    text-align: center;
+    padding: 3.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    color: white; 
   }
-
-  .top1000{
-    position: absolute;
-    right:0;
-    max-width: 40%;
-    padding:50px; 
+  
+  .header-content h1{
+    font-size: 55px;
   }
-
-  #prov{
-    font-size: 2.5em;
+  
+  .main{
+     display: flex;
+ }
+   
+  .flex-container-12gram {
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction:row;
+    justify-content:center;
+    align-items:stretch;
+    flex: 0 0 60%;
+    margin-top: 60px;
+   }
+    
+  .flex-item-12gram{
+      max-width: 250px;
+      margin: 0px 40px 40px 10px;
+      position: relative;
+   }
+   
+  .flex-container-top1000 {
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+    align-items: flex-start;
+    flex: 1;
+    margin: 150px 90px 0px 0px;
+   }
+   
+   
+  .big{
+    font-size: 60px;
     font-weight: bold;
     text-align: center;
   }
-
-  .vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
-    }
   
-  .thumbnail {
-    margin: 5px;
-    height: auto; 
-    border: white; 
-  }
-  
-  .overlay {
-    background-color: black; 
-    margin: -1px;
-    border-radius: 4px;
-  }
-
-  .overlay .text_overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    visibility:hidden;
+  .overlay{ 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
-    font-size: 1.2em;
-    max-width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0);
+    visibility: hidden;
   }
-
-  .overlay:hover .text_overlay{
-    visibility:visible;
-    
-  }
+  
+ .flex-item-12gram:hover > .overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  visibility: visible;
+}
   
   video,
   img {
-    width: 100%;
-    height: auto;
-    max-height: 100%;
-    display: block;
+    width: 200px;
   }
   
-  img:hover,
-  video:hover {
-    opacity: 0.3;
-  }
-
   .glyphicon {
   padding-left:0.3em;
   padding-right: 0.1em; 
   }
-
+  
   footer{
     height: 80px;
   }
-
- 
