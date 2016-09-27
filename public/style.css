@@ -39,6 +39,12 @@
     flex: 0 0 60%;
     margin-top: 60px;
    }
+   
+  .centered{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+  }
     
   .flex-item-12gram{
       max-width: 250px;
@@ -80,7 +86,7 @@
   }
 
   .overlay p{
-    font-size: 1.3vw;
+    font-size: 1.1vw;
     text-align: center;
   }
   
