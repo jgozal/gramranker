@@ -23,7 +23,7 @@
   }
   
   .header-content h1{
-    font-size: 55px;
+    font-size: 5vw;
   }
   
   .main{
@@ -52,14 +52,18 @@
     justify-content:flex-start;
     align-items: flex-start;
     flex: 1;
-    margin: 150px 90px 0px 0px;
+    margin: 130px 80px 0px 10px;
    }
    
    
   .big{
-    font-size: 60px;
+    font-size: 3vw;
     font-weight: bold;
     text-align: center;
+  }
+
+  .small{
+    font-size: 1.2vw;
   }
   
   .overlay{ 
@@ -88,8 +92,11 @@
   }
   
   .glyphicon {
-  padding-left:0.3em;
-  padding-right: 0.1em; 
+  padding-left: 0.5em; 
+  }
+
+  .form-inline{
+    font-size: 1.2vw;
   }
   
   footer{
