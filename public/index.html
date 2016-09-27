@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>12grams</title>
-    <!-- <meta name="viewport" content="width=device-width"> Latest compiled and minified CSS -->
+    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-    crossorigin="anonymous">
+        crossorigin="anonymous">
 
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -71,15 +71,15 @@
         <div class="flex-container-top1000">
             <p class="big">Find out if your post made it to the top 1000!</p>
             <br>
-            <p class="small">Results will only show posts you made today which are in the top 1000 at this very moment.<br><br>p.s. You can check
-                for anybody's account, not just yours <span class="glyphicon">&#xe125;</span></p>
+            <p class="small">Results will only show posts you made today which are in the top 1000 at this very moment.<br><br>p.s. You can
+                check for anybody's account, not just yours <span class="glyphicon">&#xe125;</span></p>
             <br>
-            <form class="form-inline small">
+            <form action="/top1000" method="post" class="form-inline small">
                 <div class="form-group">
                     <label for="username">Username: </label>
-                    <input type="text" class="form-control small" id="username" placeholder="champagnepapi">
+                    <input type="text" class="form-control small" id="username" name="username" placeholder="e.g. champagnepapi">
                 </div>
-                <button type="submit" class="btn btn-primary small">Send</button>
+                <input type="submit" class="btn btn-primary small" value="Send" />
             </form>
         </div>
     </div>
