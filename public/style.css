@@ -48,8 +48,9 @@
 
   #top12gram{
      position: absolute;
-     margin-top: -55px;
-     font-size: 1.8vw;
+     margin-top: -60px;
+     font-size: 1.7vw;
+     font-style: italic;
   }
     
   .flex-item-12gram{
@@ -108,10 +109,6 @@
   
   .glyphicon {
   padding-left: 0.5em; 
-  }
-
-  .form-inline{
-    font-size: 1.2vw;
   }
   
   footer{
