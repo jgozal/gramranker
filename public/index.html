@@ -72,14 +72,14 @@
             <p class="big">Find out if your post made it to the top 1000!</p>
             <br>
             <p class="small">Results will only show posts you made within the last 24 hours which are in the top 1000 at this very moment.<br><br>p.s. You can
-                check for anybody's account, not just yours <span class="glyphicon">&#xe125;</span></p>
+                check for anybody's account, not just yours (only public profiles)<span class="glyphicon">&#xe125;</span></p>
             <br>
-            <form action="/top1000" method="post" class="form-inline small">
+            <form class="form-inline small">
                 <div class="form-group">
                     <label for="username">Username: </label>
-                    <input type="text" class="form-control small" id="username" name="username" placeholder="e.g. champagnepapi">
+                    <input type="text" class="form-control small" id="username" placeholder="e.g. champagnepapi">
                 </div>
-                <input type="submit" class="btn btn-primary small" value="Send" />
+                <input type="button" class="btn btn-primary small" value="Send" onclick="getTop1000();" />
             </form>
         </div>
     </div>

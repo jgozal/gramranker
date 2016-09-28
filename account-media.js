@@ -24,7 +24,7 @@ var getData = function (user) {
 
     var cleanArr = data.filter(function (media) {
         var diff = unixTimestampNow - media.created_time;
-        var hours_diff = Math.round(diff/3600); 
+        var hours_diff = diff/3600; 
         return hours_diff <= 24;
     }).map(function (media) {
         return {

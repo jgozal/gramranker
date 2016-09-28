@@ -1,5 +1,5 @@
 var fullArr;
-
+var ranking;
 
 /* Get UTC hour difference between now and start of the day 
 
@@ -41,7 +41,7 @@ function abbreviateNumber(value) {
         }
     }
     xhr.send();
-}())
+} ())
 
 var doc = document.getElementsByClassName('flex-item-12gram');
 fullArr.forEach(function (user, index) {
@@ -53,4 +53,17 @@ fullArr.forEach(function (user, index) {
         doc[index].innerHTML += '<video autoplay loop muted><source src=' + user.durl + ' type="video/mp4"></video><div class="overlay small"><p>By @' + user.user + '<br><span class="glyphicon">&#xe005;</span> ' + abbreviateNumber(user.likes) + '<span class="glyphicon">&#xe111;</span>' + abbreviateNumber(user.comments) + '</p></div>';
     }
 })
+
+function getTop1000() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/top1000', true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            ranking = JSON.parse(xhr.responseText);
+        }
+    }
+    xhr.send(JSON.stringify({username:document.getElementById('username').value}));
+}
+
 

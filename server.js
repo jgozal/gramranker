@@ -21,8 +21,26 @@ app.get('/data', function (req, res) {
 });
 
 app.post('/top1000', function(req, res) {
-    console.log('Request for ' + req.body.username + ' was received.');
-    res.end(req.body.username);   
+  
+   fs.readFile('./data/top-media-array-1000grams', 'utf-8', function (err, file) {
+    if (err) {
+      res.send('something went wrong.');
+      return;
+    }
+    var top1000 = eval(JSON.parse(file)).slice(0, 1000);
+    var ranking = [];
+    for(var i = 0; i < top1000.length; i++){
+      if (top1000[i].user === req.body.username) {
+        ranking.push({
+               ranking: i+1,
+              link: top1000[i].link 
+            })     
+      }  
+    }
+        console.log('Request for ' + req.body.username + ' was received.');
+        res.end(JSON.stringify(ranking))
+  });
+  
 });
 
 app.listen(8080, function () {
