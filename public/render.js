@@ -1,5 +1,19 @@
 var fullArr;
 
+
+/* Get UTC hour difference between now and start of the day 
+
+var now = new Date(),
+    startOfDay = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())),
+    unixTimestampStart = startOfDay / 1000,
+    unixTimestampNow = Math.floor((new Date()).getTime() / 1000),
+    diff = unixTimestampNow - unixTimestampStart,
+    hours_diff = Math.round(diff/3600); 
+
+document.getElementById('top12gram').innerHTML = '<p>Most popular posts in the past ' + hours_diff + ' hour/s</p>'
+    
+    */
+
 function abbreviateNumber(value) {
     var newValue = value;
     if (value >= 1000) {
@@ -39,3 +53,4 @@ fullArr.forEach(function (user, index) {
         doc[index].innerHTML += '<video autoplay loop muted><source src=' + user.durl + ' type="video/mp4"></video><div class="overlay small"><p>By @' + user.user + '<br><span class="glyphicon">&#xe005;</span> ' + abbreviateNumber(user.likes) + '<span class="glyphicon">&#xe111;</span>' + abbreviateNumber(user.comments) + '</p></div>';
     }
 })
+

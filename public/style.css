@@ -37,13 +37,19 @@
     justify-content:center;
     align-items:stretch;
     flex: 0 0 60%;
-    margin-top: 60px;
+    margin-top: 90px;
    }
    
   .centered{
      display: flex;
      align-items: center;
      justify-content: center;
+  }
+
+  #top12gram{
+     position: absolute;
+     margin-top: -55px;
+     font-size: 1.8vw;
   }
     
   .flex-item-12gram{
@@ -58,7 +64,7 @@
     justify-content:flex-start;
     align-items: flex-start;
     flex: 1;
-    margin: 130px 80px 0px 10px;
+    margin: 145px 80px 0px 10px;
    }
    
    

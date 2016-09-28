@@ -1,9 +1,12 @@
 var fs = require('fs');
 var request = require('sync-request');
 
+// Get current UTC timestamp
+
 var now = new Date(),
-    startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-    unixTimestamp = startOfDay / 1000;
+    //startOfDay = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())),
+    //unixTimestampStart = startOfDay / 1000,
+    unixTimestampNow = Math.floor((new Date()).getTime() / 1000);
 
 var fullArr = [];
 var finalArr = [];
@@ -17,8 +20,12 @@ var getData = function (user) {
 
     var data = (JSON.parse(res.getBody().toString()).items);
 
+    //Return content posted in the past 24 hours
+
     var cleanArr = data.filter(function (media) {
-        return media.created_time >= unixTimestamp;
+        var diff = unixTimestampNow - media.created_time;
+        var hours_diff = Math.round(diff/3600); 
+        return hours_diff <= 24;
     }).map(function (media) {
         return {
             userId: media.user.id,
