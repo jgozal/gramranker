@@ -54,6 +54,11 @@ fullArr.forEach(function (user, index) {
     }
 })
 
+var loadTop1000 = function() {
+    document.getElementById('results').innerHTML = '';
+    
+}
+
 function getTop1000() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/top1000', true);
@@ -61,9 +66,12 @@ function getTop1000() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             ranking = JSON.parse(xhr.responseText);
+            loadTop1000();
         }
     }
     xhr.send(JSON.stringify({username:document.getElementById('username').value}));
 }
+
+
 
 
