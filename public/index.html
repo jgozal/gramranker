@@ -28,7 +28,9 @@
 
         <div class="flex-container-12gram">
 
-            <div id="top12gram"><p>Most popular posts within the last 24 hours</p></div>
+            <div id="top12gram">
+                <p>Most popular posts within the last 24 hours</p>
+            </div>
 
             <a target="_blank" href="" class="centered">
                 <div class="flex-item-12gram"></div>
@@ -69,23 +71,29 @@
         </div>
 
         <div class="flex-container-top1000">
-            <p class="big">Find out if your post made it to the top 1000!</p>
+            <p class="big">Find out if a post made it to the top 1000!</p>
             <br>
-            <p class="small">Results will only show posts you made within the last 24 hours which are in the top 1000 at this very moment.<br><br>p.s. You can
-                check for anybody's account, not just yours (only public profiles)<span class="glyphicon">&#xe125;</span></p>
+            <p class="small">Results will only show posts made within the last 24 hours which are in the top 1000 at this very moment.<br><br>p.s.
+                You can check for anybody's account, not just yours (only public profiles)<span class="glyphicon">&#xe125;</span></p>
             <br>
             <form class="form-inline small">
                 <div class="form-group">
                     <label for="username">Username: </label>
-                    <input type="text" class="form-control small" id="username" placeholder="e.g. champagnepapi">
+                    <input type="text" class="form-control small" id="username" placeholder="e.g. 9gag">
                 </div>
                 <input type="button" class="btn btn-primary small" value="Send" onclick="getTop1000();" />
             </form>
             <br>
+            <br>
             <div id="results" class="small"></div>
         </div>
     </div>
-    <footer class="master"> </footer>
+
+    <footer class="master">
+       <a href=""><p class="small">FAQ</p></a>
+        <a href=""><p class="small">Privacy Policy</p></a>
+
+    </footer>
 
     <script src="render.js"></script>
 </body>

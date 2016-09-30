@@ -113,4 +113,10 @@
   
   footer{
     height: 80px;
+    display:flex;
+  }
+
+  footer p{
+    color: white;
+    margin-left: 30px;
   }

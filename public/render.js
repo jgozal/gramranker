@@ -54,24 +54,32 @@ fullArr.forEach(function (user, index) {
     }
 })
 
-var loadTop1000 = function() {
-    document.getElementById('results').innerHTML = '';
-    
-}
-
 function getTop1000() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/top1000', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            ranking = JSON.parse(xhr.responseText);
-            loadTop1000();
+            loadTop1000(JSON.parse(xhr.responseText));
         }
     }
-    xhr.send(JSON.stringify({username:document.getElementById('username').value}));
+    xhr.send(JSON.stringify({ username: document.getElementById('username').value.toLowerCase() }));
 }
 
+var loadTop1000 = function (rankingArr) {
+    //clear
+    document.getElementById('results').innerHTML = '';
+
+    if (rankingArr.length === 0 && document.getElementById('username').value != '') {
+        document.getElementById('results').innerHTML = '<p>No posts from this user have made it to the top 1000 in the last 24 hours.</p>';
+    } else if (rankingArr.length === 0 && document.getElementById('username').value == '') {
+         document.getElementById('results').innerHTML = '<p>Please enter a username.</p>';
+    } else {
+        rankingArr.forEach(function (media) {
+            document.getElementById('results').innerHTML += '<p><a target="_blank" href="' + media.link + '">This</a> post has made it to the ' + media.ranking + ' so far!<br></p>';
+        })
+    }
+}
 
 
 

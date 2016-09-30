@@ -24,7 +24,7 @@ var getData = function (user) {
 
     var cleanArr = data.filter(function (media) {
         var diff = unixTimestampNow - media.created_time;
-        var hours_diff = diff/3600; 
+        var hours_diff = diff / 3600;
         return hours_diff <= 24;
     }).map(function (media) {
         return {
@@ -34,14 +34,14 @@ var getData = function (user) {
             mediaId: media.id,
             link: media.link,
             type: media.type,
-            durl: media.type === 'image' ? media.images.standard_resolution.url : media.videos.standard_resolution.url, 
+            durl: media.type === 'image' ? media.images.standard_resolution.url : media.videos.standard_resolution.url,
             views: media.type === 'image' ? null : media.video_views, // media.image_views does not exists
             comments: media.comments.count,
             likes: media.likes.count,
             engagement: media.comments.count + media.likes.count
         }
     })
-    return cleanArr;  
+    return cleanArr;
 }
 
 // request
@@ -59,20 +59,22 @@ fullArr.sort(function (obj1, obj2) {
     return obj2.engagement - obj1.engagement;
 });
 
-fs.writeFile("./data/top-media-array-1000grams", JSON.stringify(fullArr));
+if (fullArr.length != 0) {
+    fs.writeFile("./data/top-media-array-1000grams", JSON.stringify(fullArr));
+}
 
 // Second round for accuracy
 
-fullArr.slice(0,50).map(function(media){
+fullArr.slice(0, 50).map(function (media) {
     return media.user;
-}).filter(function(elem, index, self) {
+}).filter(function (elem, index, self) {
     return index == self.indexOf(elem);
 }).forEach(function (user) {
     try {
-       finalArr = finalArr.concat(getData(user));
+        finalArr = finalArr.concat(getData(user));
     } catch (e) {
-       console.log(e);
-       console.log(user);
+        console.log(e);
+        console.log(user);
     }
 })
 
@@ -80,5 +82,6 @@ finalArr.sort(function (obj1, obj2) {
     return obj2.engagement - obj1.engagement;
 });
 
-fs.writeFile("./data/top-media-array-12grams", JSON.stringify(finalArr));
-
+if (finalArr.length != 0) {
+    fs.writeFile("./data/top-media-array-12grams", JSON.stringify(finalArr));
+}
