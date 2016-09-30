@@ -75,6 +75,7 @@ var loadTop1000 = function (rankingArr) {
     } else if (rankingArr.length === 0 && document.getElementById('username').value == '') {
          document.getElementById('results').innerHTML = '<p>Please enter a username.</p>';
     } else {
+        document.getElementById('results').innerHTML = '<p><b>' + rankingArr[0].user + ' has ' + rankingArr.length.toString() + ' post/s in the top 1000:</b></p><br>'
         rankingArr.forEach(function (media) {
             document.getElementById('results').innerHTML += '<p><a target="_blank" href="' + media.link + '">This</a> post has made it to the ' + media.ranking + ' so far!<br></p>';
         })

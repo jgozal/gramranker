@@ -62,6 +62,7 @@ app.post('/top1000', function(req, res) {
         for (var i = 0; i < top1000.length; i++) {
             if (top1000[i].user === req.body.username) {
                 ranking.push({
+                    user: top1000[i].user,
                     ranking: ranker(i + 1),
                     link: top1000[i].link
                 })
