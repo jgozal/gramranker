@@ -108,7 +108,11 @@
   }
   
   .glyphicon {
-  padding-left: 0.5em; 
+   padding-left: 0.5em; 
+  }
+  
+  #results{
+   margin-bottom:40px;
   }
   
   footer{
@@ -120,3 +124,16 @@
     color: white;
     margin-left: 30px;
   }
+  
+  footer a:link{
+    text-decoration: none;
+  }
+  
+    .modal-open .modal,footer a:focus{
+    outline:none!important;
+  }
+  
+   #mbody p {
+      color: #333333 !important;
+  }
+  
