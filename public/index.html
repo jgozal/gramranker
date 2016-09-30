@@ -98,11 +98,11 @@
     </div>
 
     <footer class="master">
-        <a href="" data-toggle="modal" data-target="#myModal">
-            <p class="small">Privacy Policy</p>
+        <a href="" data-toggle="modal" data-target="#myModal" onclick="loadModalContent('Privacy Policy');">
+            <p>Privacy Policy</p>
         </a>
-        <a href="" data-toggle="modal" data-target="#myModal">
-            <p class="small">FAQ</p>
+        <a href="" data-toggle="modal" data-target="#myModal" onclick="loadModalContent('FAQ');">
+            <p>FAQ</p>
         </a>
 
         <!-- Modal -->
@@ -113,11 +113,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" id="mtitle">Modal Header</h4>
+                        <h4 class="modal-title" id="mtitle"></h4>
                     </div>
-                    <div class="modal-body" id="mbody">
-                        <p>Some text in the modal.</p>
-                    </div>
+                    <div class="modal-body" id="mbody"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>

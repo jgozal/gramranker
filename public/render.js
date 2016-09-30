@@ -81,5 +81,20 @@ var loadTop1000 = function (rankingArr) {
     }
 }
 
+var loadModalContent = function (modal) {
+    if(modal === 'Privacy Policy') {
+        
+        document.getElementById('mtitle').innerHTML = 'Privacy Policy';
+        
+        document.getElementById('mbody').innerHTML = '<p>placeholder</p>'
+        
+    }else if (modal === 'FAQ'){
+        
+        document.getElementById('mtitle').innerHTML = 'FAQ';
+        
+        document.getElementById('mbody').innerHTML = "<p><b>How do you calculate popularity?</b><br><br>Simple: likes + comments.<br><br><b>Why do I get results in ranking categories such as 'top 50' or 'top 300' as opposed to getting the exact ranking position of the post?</b><br><br>Instagram is an incredibly dynamic platform. Users like and comment on posts every second of the day and we can only update our data every hour. By the time we tell you that a post ranked 351, it might actually be ranked 334, so we'd rather tell you it made it to the top 400.<br><br><b>What are the different ranking categories?</b><br><br>Top 10, top 30, top 50, top 100, top 200, top 300, top 400, top 500, top 600, top 700, top 800, top 900, top 1000. If you get results saying that a post made it to the top 1000, you know it ranked somewhere between 900-1000.<br><br><b>Can you enable subscription services so that I can get notified whenever a user of my interest makes it to the top 1000 as opposed to checking the website periodically?</b><br><br>We can, but this takes up server resources and server resources cost money. Shoot us an email at info@gramranks.com and we can chat about it if you're interested.<br><br><b>I'd like to get more data on a specific user's posts.</b><br><br>Shoot us an email at info@gramranks.com.<br><br><b>Do not hesitate to email us if you have any other inquiries.</b></p>"
+    }
+}
+
 
 

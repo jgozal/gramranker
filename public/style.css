@@ -120,9 +120,10 @@
     display:flex;
   }
 
-  footer p{
+  footer a p{
+    font-size: 1.1vw;
     color: white;
-    margin-left: 30px;
+    margin-left: 40px;
   }
   
   footer a:link{
@@ -134,6 +135,11 @@
   }
   
    #mbody p {
+      font-size: 0.8vw;
       color: #333333 !important;
   }
+  
+  #mtitle{
+     font-size: 1.1vw; 
+  } 
   
