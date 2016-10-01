@@ -140,31 +140,31 @@
   }
   
   #mtitle{
-     font-size: 1.1vw; 
+     font-size: 1.2vw; 
   } 
 
   ul.share-buttons{
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-}
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
 
   ul.share-buttons li{
-  display: inline;
-}
+    display: inline;
+  }
 
   ul.share-buttons .sr-only {
-  position: absolute;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  padding: 0;
-  border: 0;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-}
+    position: absolute;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);
+    padding: 0;
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+  }
 
   ul.share-buttons img{
-  width: 32px;
-}
+    width: 32px;
+  }
   
