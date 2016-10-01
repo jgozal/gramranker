@@ -74,7 +74,7 @@ app.post('/top1000', function(req, res) {
 
 });
 
-app.listen(8080, function() {
+app.listen(process.env.PORT || 8080, function() {
     console.log('Server running on port 8080.');
 });
 
