@@ -9,5 +9,8 @@
     "cheerio": "latest",
     "express": "latest",
     "body-parser":"latest"
+  },
+  "engines": {
+    "node": "6.4.0"
   }
 }

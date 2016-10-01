@@ -7,9 +7,9 @@ var importTopAccounts = function () {
 
     var urlArray = [];
     var topAccountsArray = [];
-   
-   // Build urlArray   
-    for(var i = 1; i <= 99; i++){
+
+    // Build urlArray   
+    for (var i = 1; i <= 99; i++) {
         urlArray.push('http://zymanga.com/millionplus/' + i.toString() + 'f')
     }
 
@@ -98,8 +98,9 @@ var importTopAccounts = function () {
     })
 
     // Write full array of top accounts to file   
-    fs.writeFile("./data/top-accounts-array", JSON.stringify(topAccountsArray));
-
+    if (topAccountsArray.length != 0) {
+        fs.writeFileSync("./data/top-accounts-array", JSON.stringify(topAccountsArray));
+    }
 }
 
 importTopAccounts();
