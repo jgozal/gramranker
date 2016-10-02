@@ -86,12 +86,12 @@
                 <br>
                 <br>p.s. You can check for anybody's account, not just yours (only public profiles)<span class="glyphicon">&#xe125;</span></p>
             <br>
-            <form class="form-inline small">
+            <form class="form-inline small" onSubmit="return false;">
                 <div class="form-group">
                     <label for="username">Username: </label>
                     <input type="text" class="form-control small" id="username" placeholder="e.g. 9gag">
                 </div>
-                <input type="button" class="btn btn-primary small" value="Send" onclick="getTop1000();" />
+                <input type="button" id="send" class="btn btn-primary small" value="Send" onclick="getTop1000();" />
             </form>
             <br>
             <br>

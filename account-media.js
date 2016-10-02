@@ -3,6 +3,9 @@ var request = require('sync-request');
 
 var importAccountMedia = function () {
 
+    // start timer
+    var start = new Date().getTime();
+
     console.log('Starting top media import.');
 
     // Get current UTC timestamp
@@ -20,10 +23,10 @@ var importAccountMedia = function () {
     var topAccountsArray = JSON.parse(fs.readFileSync('./data/top-accounts-array', 'utf8'));
 
     var getData = function (user) {
-        var res = request('GET', 'https://www.instagram.com/' + user + '/media/',{
-            'retry' : true,
-            'maxRetries' : 5,
-            'retryDelay' : 1000
+        var res = request('GET', 'https://www.instagram.com/' + user + '/media/', {
+            'retry': true,
+            'maxRetries': 5,
+            'retryDelay': 1000
         });
 
         var data = (JSON.parse(res.getBody().toString()).items);
@@ -95,9 +98,11 @@ var importAccountMedia = function () {
     }
 
     console.log('Top media import done.');
-
+    var end = new Date().getTime();
+    var time = end - start;
+    console.log('Execution time: ' + time);
 }
 
-while(true){
+while (true) {
     importAccountMedia();
 }
