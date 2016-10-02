@@ -20,7 +20,11 @@ var importAccountMedia = function () {
     var topAccountsArray = JSON.parse(fs.readFileSync('./data/top-accounts-array', 'utf8'));
 
     var getData = function (user) {
-        var res = request('GET', 'https://www.instagram.com/' + user + '/media/');
+        var res = request('GET', 'https://www.instagram.com/' + user + '/media/',{
+            'retry' : true,
+            'maxRetries' : 5,
+            'retryDelay' : 1000
+        });
 
         var data = (JSON.parse(res.getBody().toString()).items);
 
@@ -54,7 +58,7 @@ var importAccountMedia = function () {
         try {
             fullArr = fullArr.concat(getData(user.account));
         } catch (e) {
-            console.log(e);
+            console.log(e.statusCode)
             console.log(user);
         }
     })
@@ -77,7 +81,7 @@ var importAccountMedia = function () {
         try {
             finalArr = finalArr.concat(getData(user));
         } catch (e) {
-            console.log(e);
+            console.log(e.statusCode)
             console.log(user);
         }
     })
