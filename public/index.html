@@ -89,7 +89,7 @@
             <form class="form-inline small" onSubmit="return false;">
                 <div class="form-group">
                     <label for="username">Username: </label>
-                    <input type="text" class="form-control small" id="username" placeholder="e.g. 9gag">
+                    <input type="text" class="form-control small" id="username" placeholder="e.g. 9gag" onblur="ga('send', 'pageview', 'gramranker.com?top1000=' + this.value);">
                 </div>
                 <input type="button" id="send" class="btn btn-primary small" value="Send" onclick="getTop1000();" />
             </form>
