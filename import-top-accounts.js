@@ -99,7 +99,7 @@ var importTopAccounts = function () {
 
     // Write full array of top accounts to file   
     if (topAccountsArray.length != 0) {
-        fs.writeFileSync("./data/top-accounts-array", JSON.stringify(topAccountsArray));
+        fs.writeFileSync("./tmp/top-accounts-array", JSON.stringify(topAccountsArray));
     }
 }
 

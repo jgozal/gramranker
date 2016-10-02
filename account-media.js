@@ -17,7 +17,7 @@ var importAccountMedia = function () {
 
     // Read full array of top accounts
 
-    var topAccountsArray = JSON.parse(fs.readFileSync('./data/top-accounts-array', 'utf8'));
+    var topAccountsArray = JSON.parse(fs.readFileSync('./tmp/top-accounts-array', 'utf8'));
 
     var getData = function (user) {
         var res = request('GET', 'https://www.instagram.com/' + user + '/media/',{
@@ -68,7 +68,7 @@ var importAccountMedia = function () {
     });
 
     if (fullArr.length != 0) {
-        fs.writeFileSync("./data/top-media-array-1000grams", JSON.stringify(fullArr));
+        fs.writeFileSync("./tmp/top-media-array-1000grams", JSON.stringify(fullArr));
     }
 
     // Second round for accuracy
@@ -91,7 +91,7 @@ var importAccountMedia = function () {
     });
 
     if (finalArr.length != 0) {
-        fs.writeFileSync("./data/top-media-array-12grams", JSON.stringify(finalArr));
+        fs.writeFileSync("./tmp/top-media-array-12grams", JSON.stringify(finalArr));
     }
 
     console.log('Top media import done.');
