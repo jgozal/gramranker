@@ -1,106 +1,96 @@
-var importTopAccounts = function () {
+let importTopAccounts = function () {
 
     // Load packages
-    var fs = require('fs');
-    var request = require('sync-request');
-    var cheerio = require("cheerio");
+    let fs = require('fs')
+    let request = require('request')
+    let cheerio = require("cheerio");
 
-    var urlArray = [];
-    var topAccountsArray = [];
+    let urlArray = [];
+    let urlCounter = 0; // for better control flow with promises 
+    let topAccountsArray = [];
 
     // Build urlArray   
-    for (var i = 1; i <= 99; i++) {
+    for (let i = 1; i <= 100; i++) {
         urlArray.push('http://zymanga.com/millionplus/' + i.toString() + 'f')
     }
 
+    let parseHtml = function (html) {
+        $ = cheerio.load(html)
+
+        let accounts = [];
+
+        // Grab account values
+        $('#username a').each(function (i, elem) {
+            accounts[i] = { account: $(this).text() };
+        });
+
+        // Grab follower values
+        let followersCounter = 0;
+        $('td').each(function (i, elem) {
+            try {
+                let text = $(this).text();
+                if (text.includes('Followers')) {
+                    let value = parseInt(text.replace('Followers', '').replace(/,/g, ''))
+                    if (!isNaN(value)) {
+                        accounts[followersCounter].followers = value;
+                        followersCounter++;
+                    }
+
+                }
+            } catch (e) {
+                console.log(e)
+                accounts[followersCounter].followers = null;
+                followersCounter++;
+            }
+        });
+
+        // Grab media values
+        let mediaCounter = 0;
+        $('td').each(function (i, elem) {
+            try {
+                let text = $(this).text();
+                if (text.includes('Media')) {
+                    let value = parseInt(text.replace('Media', '').replace(/,/g, ''))
+                    if (!isNaN(value)) {
+                        accounts[mediaCounter].media = value;
+                        mediaCounter++;
+                    }
+
+                }
+            } catch (e) {
+                console.log(e)
+                accounts[mediaCounter].media = null;
+                mediaCounter++;
+            }
+        });
+
+        accounts.join(', ');
+        topAccountsArray = topAccountsArray.concat(accounts);
+        urlCounter++
+    };
+
+
     // Run scraper for each url
-
-    urlArray.forEach(function (url) {
-
-        var parseHtml = function (html) {
-            $ = cheerio.load(html)
-
-            var accounts = [];
-
-            // Grab account values
-            $('#username a').each(function (i, elem) {
-                accounts[i] = { account: $(this).text() };
-            });
-
-            /*
-            // If one day all mighty Instagram grants us access to public_content permissions, we might be able to use this...
-            // Grab account id
-            var idCounter = 0;
-            accounts.forEach(function (account) {
-
-                try {
-                    var res = request('GET', 'https://www.instagram.com/' + (account.account).toString() + '/?__a=1');
-                    var id = parseInt(JSON.parse(res.getBody().toString()).user.id);
-                    accounts[idCounter].id = (!isNaN(id)) ? id : null;
-                    idCounter++;
-
-                } catch (e) {
-                    accounts[idCounter].id = null;
-                    idCounter++;
-                }
-
+    let getAccounts = function () {
+        return new Promise(function (resolve, reject) {
+            urlArray.forEach(function (url, index) {
+                request(url, function (error, res, body) {
+                    if (error) console.log(error);
+                    parseHtml(body);
+                    console.log(urlCounter + '%')
+                    if(urlCounter == 100) resolve(topAccountsArray);
+                })
             })
-            */
 
-            // Grab follower values
-            var followersCounter = 0;
-            $('td').each(function (i, elem) {
-                try {
-                    var text = $(this).text();
-                    if (text.includes('Followers')) {
-                        var value = parseInt(text.replace('Followers', '').replace(/,/g, ''))
-                        if (!isNaN(value)) {
-                            accounts[followersCounter].followers = value;
-                            followersCounter++;
-                        }
-
-                    }
-                } catch (e) {
-                    console.log(e)
-                    accounts[followersCounter].followers = null;
-                    followersCounter++;
-                }
-            });
-
-            // Grab media values
-            var mediaCounter = 0;
-            $('td').each(function (i, elem) {
-                try {
-                    var text = $(this).text();
-                    if (text.includes('Media')) {
-                        var value = parseInt(text.replace('Media', '').replace(/,/g, ''))
-                        if (!isNaN(value)) {
-                            accounts[mediaCounter].media = value;
-                            mediaCounter++;
-                        }
-
-                    }
-                } catch (e) {
-                    console.log(e)
-                    accounts[mediaCounter].media = null;
-                    mediaCounter++;
-                }
-            });
-
-            accounts.join(', ');
-            topAccountsArray = topAccountsArray.concat(accounts);
-        };
-
-        var res = request('GET', url);
-        parseHtml(res.getBody());
-
-
-    })
-
-    // Write full array of top accounts to file   
-    if (topAccountsArray.length != 0) {
-        fs.writeFileSync("./data/top-accounts-array", JSON.stringify(topAccountsArray));
+        })
     }
+    // Write full array of top accounts to file 
+
+    getAccounts().then(function (topAccounts) {
+        if (topAccounts.length != 0) {
+            fs.writeFileSync("./data/top-accounts-array", JSON.stringify(topAccounts));
+        }
+    })
 }
 
 importTopAccounts();

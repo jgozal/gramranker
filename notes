@@ -9,3 +9,23 @@ q=ig_user(23136127)+%7B%0A++follows.after(AQCc21yhwtDk3a_6i_aWnMN-ODA38RpB-apj8o
 
 All media
 q=ig_user(23136127)+%7B+media.after(1325693411550681541%2C+12)+%7B%0A++count%2C%0A++nodes+%7B%0A++++caption%2C%0A++++code%2C%0A++++comments+%7B%0A++++++count%0A++++%7D%2C%0A++++comments_disabled%2C%0A++++date%2C%0A++++dimensions+%7B%0A++++++height%2C%0A++++++width%0A++++%7D%2C%0A++++display_src%2C%0A++++id%2C%0A++++is_video%2C%0A++++likes+%7B%0A++++++count%0A++++%7D%2C%0A++++owner+%7B%0A++++++id%0A++++%7D%2C%0A++++thumbnail_src%2C%0A++++video_views%0A++%7D%2C%0A++page_info%0A%7D%0A+%7D&ref=users%3A%3Ashow
+
+    /*
+            // If one day all mighty Instagram grants us access to public_content permissions, we might be able to use this...
+            // Grab account id
+            var idCounter = 0;
+            accounts.forEach(function (account) {
+
+                try {
+                    var res = request('GET', 'https://www.instagram.com/' + (account.account).toString() + '/?__a=1');
+                    var id = parseInt(JSON.parse(res.getBody().toString()).user.id);
+                    accounts[idCounter].id = (!isNaN(id)) ? id : null;
+                    idCounter++;
+
+                } catch (e) {
+                    accounts[idCounter].id = null;
+                    idCounter++;
+                }
+
+            })
+            */

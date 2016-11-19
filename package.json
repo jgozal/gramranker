@@ -10,6 +10,8 @@
     "cookie-parser": "^1.4.3",
     "express": "~4.13.4",
     "mongoose": "^4.6.5",
-    "morgan": "^1.7.0"
+    "morgan": "^1.7.0",
+    "request": "latest",
+    "cheerio": "latest"
   }
 }
