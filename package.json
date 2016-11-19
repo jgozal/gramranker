@@ -1,16 +1,15 @@
 {
-  "name"         : "dailygram",
-  "version"      : "0.0.1",
-  "description"  : "dailygram",
-  "main"         : "server.js",
-  "author"       : "jg",
-  "dependencies" : {
-    "sync-request": "latest",
-    "cheerio": "latest",
-    "express": "latest",
-    "body-parser":"latest"
+  "name": "gramranker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
   },
-  "engines": {
-    "node": "6.4.0"
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "express": "~4.13.4",
+    "mongoose": "^4.6.5",
+    "morgan": "^1.7.0"
   }
 }
