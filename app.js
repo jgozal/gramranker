@@ -34,7 +34,7 @@ let conn = mongoose.connection;
 conn.on('error', console.error.bind(console, 'connection error:'));
 
 conn.once('open', function () {
-    console.log('Succesfully connected to mongolabs') 
+    console.log('Succesfully connected to mongolabs');
     app.listen(port, function () {
         console.log('Server running on port ' + port);
     });

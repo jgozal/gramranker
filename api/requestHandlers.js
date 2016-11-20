@@ -1,7 +1,5 @@
 'use strict'
 
-let models = require('../models/models.js');
-
 let requestHandlers = {
 
 }
