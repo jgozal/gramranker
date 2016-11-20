@@ -89,9 +89,6 @@ let getAccounts = function () {
                 console.log(urlCounter + '%')
                 if (urlCounter == 99) {
                     console.log('account import completed... saving data...');
-                    topAccountsArray.sort(function (a, b) {
-                        return b.followers - a.followers;
-                    })
                     resolve(topAccountsArray);
                 }
             })
