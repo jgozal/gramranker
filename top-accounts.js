@@ -1,3 +1,11 @@
+/*  The ranking on http://zymanga.com/ is most likely built by crawling on a number
+ *  of random Instagram users, and counting the specific accounts they all follow. 
+ *  It is all a probability game - those accounts that are followed by most of the
+ *  random users are most likely in the top 5000. Although I could have built this myself,
+ *  I decided not to in order to avoid making even more calls to Instagram's servers.
+ *  By scraping zymanga.com, I save thousands of calls that could get me blocked.
+ */
+
 // Load packages
 let request = require('request')
 let cheerio = require("cheerio");
