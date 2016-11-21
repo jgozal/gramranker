@@ -19,11 +19,6 @@ let options = {
 
 let mongodbUri = secrets.mongolab_creds;
 
-mongoose.connect(mongodbUri, options);
-let conn = mongoose.connection;
-
-conn.on('error', console.error.bind(console, 'connection error:'));
-
 // Get current UTC timestamp
 
 let now = new Date()
@@ -32,14 +27,23 @@ let accountCounter = 0;
 let allMedia = [];
 let retries = {}; // used to store request retries
 
+// Connect to mongolabs host
+
+let mlabsConnect = function() {
+    mongoose.connect(mongodbUri, options);
+    let conn = mongoose.connection;
+    conn.on('error', console.error.bind(console, 'connection error:'));
+    return conn;
+}
+
 // Read Accounts collection in db
 
-let topAccounts = new Promise(function (resolve, reject) {
-    conn.once('open', function () {
+let topAccounts = new Promise(function(resolve, reject) {
+    mlabsConnect().once('open', function() {
         console.log('Succesfully connected to mongolabs: getting accounts data...');
         Account
             .find()
-            .exec(function (err, accounts) {
+            .exec(function(err, accounts) {
                 if (err) reject(err);
                 resolve(accounts);
                 console.log('closing connection...')
@@ -50,15 +54,15 @@ let topAccounts = new Promise(function (resolve, reject) {
 
 // Clean response JSON
 
-let cleanData = function (data) {
+let cleanData = function(data) {
     return data
         //Return content posted in the past 24 hours
-        .filter(function (media) {
+        .filter(function(media) {
             let diff = unixTimestampNow - media.created_time;
             let hours_diff = diff / 3600;
             return hours_diff <= 24;
         })
-        .map(function (media) {
+        .map(function(media) {
             return {
                 userId: media.user.id,
                 user: media.user.username,
@@ -75,15 +79,17 @@ let cleanData = function (data) {
         })
 }
 
-let retryRequest = function (user) {
-    getData.unshift(user, function () {
+// retry request by inserting the user back into the queue
+
+let retryRequest = function(user) {
+    getData.unshift(user, function() {
         console.log(retries[user] + ': retrying ' + user);
     });
 }
 
 // Request
 
-let getData = async.queue(function (user, progress) {
+let getData = async.queue(function(user, progress) {
 
     let url = 'https://www.instagram.com/' + user + '/media/';
 
@@ -92,7 +98,7 @@ let getData = async.queue(function (user, progress) {
         json: true
     }
 
-    request(options, function (error, res, body) {
+    request(options, function(error, res, body) {
         if (error) console.log(error);
         try {
             allMedia = allMedia.concat(cleanData(body.items));
@@ -112,15 +118,15 @@ let getData = async.queue(function (user, progress) {
     })
 }, 5)
 
-let importAccountMedia = function () {
+// import all account media
 
-    return new Promise(function (resolve, reject) {
-
+let importAccountMedia = function() {
+    return new Promise(function(resolve, reject) {
         topAccounts
-            .then(function (accounts) {
-                accounts.forEach(function (user) {
+            .then(function(accounts) {
+                accounts.forEach(function(user) {
                     try {
-                        getData.push(user.account, function () {
+                        getData.push(user.account, function() {
                             accountCounter++
                             console.log((accountCounter / accounts.length * 100).toFixed(2) + '%')
                             if (accountCounter == accounts.length) {
@@ -133,10 +139,9 @@ let importAccountMedia = function () {
                     }
                 })
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             })
-
     })
 
     //let finalArr = [];
@@ -172,28 +177,28 @@ let importAccountMedia = function () {
 // start top media import
 
 importAccountMedia()
-    .then(function (topMedia) {
+    .then(function(topMedia) {
         // sorting media by engagement score
-        topMedia.sort(function (a, b) {
+        topMedia.sort(function(a, b) {
             return b.engagement - a.engagement;
         });
 
         if (topMedia.length != 0) {
-            conn.once('open', function () {
+            mlabsConnect().once('open', function() {
                 console.log('Succesfully connected to mongolabs: saving media data...');
                 // Remove old documents in collection
-                Media.remove({}, function () {
+                Media.remove({}, function() {
                     console.log('removed old media')
                 })
                 // Batch insert
                 Media.insertMany(topMedia)
-                    .then(function (result) {
+                    .then(function(result) {
                         if (result.length != 0) {
                             console.log('Succesfully saved ' + result.length + ' documents... closing connection...')
                             mongoose.connection.close(); // close connection
                         }
                     })
-                    .catch(function (err) {
+                    .catch(function(err) {
                         console.log('oh shit');
                         console.log(err);
                     })
