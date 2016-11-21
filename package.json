@@ -6,12 +6,13 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.15.2",
+    "cheerio": "latest",
     "cookie-parser": "^1.4.3",
     "express": "~4.13.4",
     "mongoose": "^4.6.5",
     "morgan": "^1.7.0",
-    "request": "latest",
-    "cheerio": "latest"
+    "request": "latest"
   }
 }
