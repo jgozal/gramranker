@@ -24,7 +24,7 @@ let mongodbUri = secrets.mongolab_creds;
 let now = new Date()
 let unixTimestampNow = Math.floor((new Date()).getTime() / 1000);
 let accountCounter = 0;
-let allMedia = [];
+let mediaData = [];
 let retries = {}; // used to store request retries
 
 // Connect to mongolabs host
@@ -98,29 +98,34 @@ let getData = async.queue(function(user, progress) {
         json: true
     }
 
-    request(options, function(error, res, body) {
-        if (error) console.log(error);
-        try {
-            allMedia = allMedia.concat(cleanData(body.items));
-        } catch (e) {
-            console.log(url)
-            console.log(e);
-            // retry request until it succeeds for at least 5 tries
-            if (retries[user] && retries[user] < 5) {
-                retries[user]++
-                retryRequest(user);
-            } else if (!retries[user]) {
-                retries[user] = 1;
-                retryRequest(user);
+    // slow down requests to avoid getting blocked
+    setTimeout(function() {
+        request(options, function(error, res, body) {
+            if (error) console.log(error);
+            try {
+                mediaData = mediaData.concat(cleanData(body.items));
+            } catch (e) {
+                console.log(url)
+                console.log(e);
+                // retry request until it succeeds for at least 5 tries
+                if (retries[user] && retries[user] < 5) {
+                    retries[user]++
+                    retryRequest(user);
+                } else if (!retries[user]) {
+                    retries[user] = 1;
+                    retryRequest(user);
+                }
             }
-        }
-        progress();
-    })
-}, 5)
+            progress();
+        })
+    }, 250)
+}, 1)
 
 // import all account media
 
 let importAccountMedia = function() {
+    accountCounter = 0; //reset accountCounter
+    mediaData = []; //reset mediaData
     return new Promise(function(resolve, reject) {
         topAccounts
             .then(function(accounts) {
@@ -128,9 +133,9 @@ let importAccountMedia = function() {
                     try {
                         getData.push(user.account, function() {
                             accountCounter++
-                            console.log((accountCounter / accounts.length * 100).toFixed(2) + '%')
+                            console.log((accountCounter / accounts.length * 100).toFixed(2) + '%')  // print progress
                             if (accountCounter == accounts.length) {
-                                resolve(allMedia);
+                                resolve(mediaData);
                             }
                         });
                     } catch (e) {
@@ -143,69 +148,80 @@ let importAccountMedia = function() {
                 console.log(err);
             })
     })
+}
 
-    //let finalArr = [];
+let pageMediaImport = function(data) {
+    accountCounter = 0; //reset accountCounter
+    mediaData = []; //reset mediaData
 
-    /*
-    // Second round for accuracy
+    console.log('starting page media import...')
 
-    allMedia.slice(0, 50).map(function (media) {
+    data.slice(0, 50).map(function(media) {
+        // get the top 50 posts' accounts
         return media.user;
-    }).filter(function (elem, index, self) {
+    }).filter(function(elem, index, self) {
+        //remove duplicates
         return index == self.indexOf(elem);
-    }).forEach(function (user) {
+    }).forEach(function(user, index, array) {
+        //get media data for each account
         try {
-            finalArr = finalArr.concat(getData(user));
+            getData.push(user, function() {
+                accountCounter++
+                console.log((accountCounter / array.length * 100).toFixed(2) + '%')  // print progress
+                if (accountCounter == array.length) {
+                    mediaData.sort(function(a, b) {
+                        return b.engagement - a.engagement;
+                    });
+
+                    if (mediaData.length != 0) {
+                        fs.writeFileSync("./data/top-media-array-12grams", JSON.stringify(mediaData));
+                        console.log('page media complete');
+                    }
+                    // repeat media import
+                    repeat()
+                }
+            });
         } catch (e) {
-            console.log(e.statusCode)
+            console.log(e)
             console.log(user);
         }
     })
-
-    finalArr.sort(function (obj1, obj2) {
-        return obj2.engagement - obj1.engagement;
-    });
-
-    if (finalArr.length != 0) {
-        fs.writeFileSync("./data/top-media-array-12grams", JSON.stringify(finalArr));
-    }
-
-    */
-
 }
 
-// start top media import
-
-importAccountMedia()
-    .then(function(topMedia) {
-        // sorting media by engagement score
-        topMedia.sort(function(a, b) {
-            return b.engagement - a.engagement;
-        });
-
-        if (topMedia.length != 0) {
-            mlabsConnect().once('open', function() {
-                console.log('Succesfully connected to mongolabs: saving media data...');
-                // Remove old documents in collection
-                Media.remove({}, function() {
-                    console.log('removed old media')
-                })
-                // Batch insert
-                Media.insertMany(topMedia)
-                    .then(function(result) {
-                        if (result.length != 0) {
-                            console.log('Succesfully saved ' + result.length + ' documents... closing connection...')
-                            mongoose.connection.close(); // close connection
-                        }
-                    })
-                    .catch(function(err) {
-                        console.log('oh shit');
-                        console.log(err);
-                    })
+let repeat = function() {
+    importAccountMedia()
+        .then(function(topMedia) {
+            // sorting media by engagement score
+            topMedia.sort(function(a, b) {
+                return b.engagement - a.engagement;
             });
-        }
-    })
 
+            if (topMedia.length != 0) {
+                mlabsConnect().once('open', function() {
+                    console.log('Succesfully connected to mongolabs: saving media data...');
+                    // Remove old documents in collection
+                    Media.remove({}, function() {
+                        console.log('removed old media')
+                    })
+                    // Batch insert
+                    Media.insertMany(topMedia)
+                        .then(function(result) {
+                            if (result.length != 0) {
+                                console.log('Succesfully saved ' + result.length + ' documents... closing connection...')
+                                mongoose.connection.close(); // close connection
+                                // Second round for accuracy on front page
+                                pageMediaImport(mediaData);
+                            }
+                        })
+                        .catch(function(err) {
+                            console.log('oh shit');
+                            console.log(err);
+                        })
+                });
+            }
+        })
+}
 
-
+// start top media import and repeat
+repeat();
 
