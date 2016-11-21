@@ -30,17 +30,22 @@ let now = new Date()
 let unixTimestampNow = Math.floor((new Date()).getTime() / 1000);
 let accountCounter = 0;
 let allMedia = [];
-let retries = {};
+let retries = {}; // used to store request retries
 
 // Read Accounts collection in db
 
 let topAccounts = new Promise(function (resolve, reject) {
-    Account
-        .find()
-        .exec(function (err, accounts) {
-            if (err) reject(err);
-            resolve(accounts);
-        })
+    conn.once('open', function () {
+        console.log('Succesfully connected to mongolabs: getting accounts data...');
+        Account
+            .find()
+            .exec(function (err, accounts) {
+                if (err) reject(err);
+                resolve(accounts);
+                console.log('closing connection...')
+                mongoose.connection.close(); // close connection
+            })
+    });
 })
 
 // Clean response JSON
@@ -70,6 +75,12 @@ let cleanData = function (data) {
         })
 }
 
+let retryRequest = function (user) {
+    getData.unshift(user, function () {
+        console.log(retries[user] + ': retrying ' + user);
+    });
+}
+
 // Request
 
 let getData = async.queue(function (user, progress) {
@@ -88,25 +99,20 @@ let getData = async.queue(function (user, progress) {
         } catch (e) {
             console.log(url)
             console.log(e);
+            // retry request until it succeeds for at least 5 tries
             if (retries[user] && retries[user] < 5) {
                 retries[user]++
-                getData.unshift(user, function () {
-                    console.log(retries[user] + ': retrying ' + user);
-                });
-            }else if(!retries[user]){
+                retryRequest(user);
+            } else if (!retries[user]) {
                 retries[user] = 1;
-                getData.unshift(user, function () {
-                    console.log(retries[user] + ': retrying ' + user);
-                });
+                retryRequest(user);
             }
         }
         progress();
     })
-}, 10)
+}, 5)
 
 let importAccountMedia = function () {
-
-    //let finalArr = [];
 
     return new Promise(function (resolve, reject) {
 
@@ -115,8 +121,8 @@ let importAccountMedia = function () {
                 accounts.forEach(function (user) {
                     try {
                         getData.push(user.account, function () {
-                            console.log((accountCounter / accounts.length * 100).toFixed(2) + '%')
                             accountCounter++
+                            console.log((accountCounter / accounts.length * 100).toFixed(2) + '%')
                             if (accountCounter == accounts.length) {
                                 resolve(allMedia);
                             }
@@ -133,7 +139,7 @@ let importAccountMedia = function () {
 
     })
 
-
+    //let finalArr = [];
 
     /*
     // Second round for accuracy
@@ -163,35 +169,37 @@ let importAccountMedia = function () {
 
 }
 
+// start top media import
 
+importAccountMedia()
+    .then(function (topMedia) {
+        // sorting media by engagement score
+        topMedia.sort(function (a, b) {
+            return b.engagement - a.engagement;
+        });
 
-// once connection to db is open, start importing accounts
-
-conn.once('open', function () {
-    console.log('Succesfully connected to mongolabs');
-    // start timer
-    //let start = new Date().getTime();
-
-    //console.log('Starting media import.');
-
-    // while (true) {
-    importAccountMedia()
-        .then(function (data) {
-            data.sort(function (a, b) {
-                return b.engagement - a.engagement;
+        if (topMedia.length != 0) {
+            conn.once('open', function () {
+                console.log('Succesfully connected to mongolabs: saving media data...');
+                // Remove old documents in collection
+                Media.remove({}, function () {
+                    console.log('removed old media')
+                })
+                // Batch insert
+                Media.insertMany(topMedia)
+                    .then(function (result) {
+                        if (result.length != 0) {
+                            console.log('Succesfully saved ' + result.length + ' documents... closing connection...')
+                            mongoose.connection.close(); // close connection
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log('oh shit');
+                        console.log(err);
+                    })
             });
-
-            if (data.length != 0) {
-                fs.writeFileSync("./data/top-media-array-1000grams", JSON.stringify(data));
-            }
-        })
-    // }
-
-    //console.log('media import complete');
-    //let end = new Date().getTime();
-    //let time = end - start;
-    //console.log('Execution time: ' + time);
-});
+        }
+    })
 
 
 
