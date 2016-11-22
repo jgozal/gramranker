@@ -1,4 +1,4 @@
-// cron job: while :; do node media-import.js; sleep 90; done
+// run on terminal: while :; do node media-import.js; sleep 60; done
 
 'use strict'
 
