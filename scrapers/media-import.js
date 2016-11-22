@@ -99,28 +99,28 @@ let getData = async.queue(function (user, progress) {
     }
 
     // slow down requests to avoid getting blocked
-    //setTimeout(function () {
-    request(options, function (error, res, body) {
-        if (error) console.log(error);
-        try {
-            mediaData = mediaData.concat(cleanData(body.items));
-        } catch (e) {
-            if (res) console.log(res.statusCode)
-            console.log(url)
-            //console.log(e);
-            // retry request until it succeeds for at least 5 tries
-            if (retries[user] && retries[user] < 5) {
-                retries[user]++
-                retryRequest(user);
-            } else if (!retries[user]) {
-                retries[user] = 1;
-                retryRequest(user);
+    setTimeout(function () {
+        request(options, function (error, res, body) {
+            if (error) console.log(error);
+            try {
+                mediaData = mediaData.concat(cleanData(body.items));
+            } catch (e) {
+                if (res) console.log(res.statusCode)
+                console.log(url)
+                //console.log(e);
+                // retry request until it succeeds for at least 5 tries
+                if (retries[user] && retries[user] < 5) {
+                    retries[user]++
+                    retryRequest(user);
+                } else if (!retries[user]) {
+                    retries[user] = 1;
+                    retryRequest(user);
+                }
             }
-        }
-        progress();
-    })
-    //}, 250)
-}, 10)
+            progress();
+        })
+    }, 250)
+}, 1)
 
 // import all account media
 
@@ -179,7 +179,7 @@ let pageMediaImport = function (data) {
                         console.log('page media complete');
                     }
                     // repeat media import
-                    //repeat()
+                    repeat()
                 }
             });
         } catch (e) {
@@ -200,7 +200,7 @@ let repeat = function () {
             if (topMedia.length != 0) {
                 mlabsConnect().once('open', function () {
                     console.log('Succesfully connected to mongolabs: saving media data...');
-                    
+
                     // drop media collection
                     mongoose.connection.db.dropCollection('media', function (err, result) {
                         console.log('removed old media')
