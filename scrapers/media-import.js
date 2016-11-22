@@ -29,7 +29,7 @@ let retries = {}; // used to store request retries
 
 // Connect to mongolabs host
 
-let mlabsConnect = function() {
+let mlabsConnect = function () {
     mongoose.connect(mongodbUri, options);
     let conn = mongoose.connection;
     conn.on('error', console.error.bind(console, 'connection error:'));
@@ -38,12 +38,12 @@ let mlabsConnect = function() {
 
 // Read Accounts collection in db
 
-let topAccounts = new Promise(function(resolve, reject) {
-    mlabsConnect().once('open', function() {
+let topAccounts = new Promise(function (resolve, reject) {
+    mlabsConnect().once('open', function () {
         console.log('Succesfully connected to mongolabs: getting accounts data...');
         Account
             .find()
-            .exec(function(err, accounts) {
+            .exec(function (err, accounts) {
                 if (err) reject(err);
                 resolve(accounts);
                 console.log('closing connection...')
@@ -54,15 +54,15 @@ let topAccounts = new Promise(function(resolve, reject) {
 
 // Clean response JSON
 
-let cleanData = function(data) {
+let cleanData = function (data) {
     return data
         //Return content posted in the past 24 hours
-        .filter(function(media) {
+        .filter(function (media) {
             let diff = unixTimestampNow - media.created_time;
             let hours_diff = diff / 3600;
             return hours_diff <= 24;
         })
-        .map(function(media) {
+        .map(function (media) {
             return {
                 userId: media.user.id,
                 user: media.user.username,
@@ -81,15 +81,15 @@ let cleanData = function(data) {
 
 // retry request by inserting the user back into the queue
 
-let retryRequest = function(user) {
-    getData.unshift(user, function() {
+let retryRequest = function (user) {
+    getData.unshift(user, function () {
         console.log(retries[user] + ': retrying ' + user);
     });
 }
 
 // Request
 
-let getData = async.queue(function(user, progress) {
+let getData = async.queue(function (user, progress) {
 
     let url = 'https://www.instagram.com/' + user + '/media/';
 
@@ -99,40 +99,40 @@ let getData = async.queue(function(user, progress) {
     }
 
     // slow down requests to avoid getting blocked
-    setTimeout(function() {
-        request(options, function(error, res, body) {
-            if (error) console.log(error);
-            try {
-                mediaData = mediaData.concat(cleanData(body.items));
-            } catch (e) {
-                if (res) console.log(res.statusCode)
-                console.log(url)
-                //console.log(e);
-                // retry request until it succeeds for at least 5 tries
-                if (retries[user] && retries[user] < 5) {
-                    retries[user]++
-                    retryRequest(user);
-                } else if (!retries[user]) {
-                    retries[user] = 1;
-                    retryRequest(user);
-                }
+    //setTimeout(function () {
+    request(options, function (error, res, body) {
+        if (error) console.log(error);
+        try {
+            mediaData = mediaData.concat(cleanData(body.items));
+        } catch (e) {
+            if (res) console.log(res.statusCode)
+            console.log(url)
+            //console.log(e);
+            // retry request until it succeeds for at least 5 tries
+            if (retries[user] && retries[user] < 5) {
+                retries[user]++
+                retryRequest(user);
+            } else if (!retries[user]) {
+                retries[user] = 1;
+                retryRequest(user);
             }
-            progress();
-        })
-    }, 250)
-}, 1)
+        }
+        progress();
+    })
+    //}, 250)
+}, 10)
 
 // import all account media
 
-let importAccountMedia = function() {
+let importAccountMedia = function () {
     accountCounter = 0; //reset accountCounter
     mediaData = []; //reset mediaData
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         topAccounts
-            .then(function(accounts) {
-                accounts.forEach(function(user) {
+            .then(function (accounts) {
+                accounts.forEach(function (user) {
                     try {
-                        getData.push(user.account, function() {
+                        getData.push(user.account, function () {
                             accountCounter++
                             console.log((accountCounter / accounts.length * 100).toFixed(2) + '%')  // print progress
                             if (accountCounter == accounts.length) {
@@ -145,41 +145,41 @@ let importAccountMedia = function() {
                     }
                 })
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 console.log(err);
             })
     })
 }
 
-let pageMediaImport = function(data) {
+let pageMediaImport = function (data) {
     accountCounter = 0; //reset accountCounter
     mediaData = []; //reset mediaData
 
     console.log('starting page media import...')
 
-    data.slice(0, 50).map(function(media) {
+    data.slice(0, 50).map(function (media) {
         // get the top 50 posts' accounts
         return media.user;
-    }).filter(function(elem, index, self) {
+    }).filter(function (elem, index, self) {
         //remove duplicates
         return index == self.indexOf(elem);
-    }).forEach(function(user, index, array) {
+    }).forEach(function (user, index, array) {
         //get media data for each account
         try {
-            getData.push(user, function() {
+            getData.push(user, function () {
                 accountCounter++
                 console.log((accountCounter / array.length * 100).toFixed(2) + '%')  // print progress
                 if (accountCounter == array.length) {
-                    mediaData.sort(function(a, b) {
+                    mediaData.sort(function (a, b) {
                         return b.engagement - a.engagement;
                     });
 
                     if (mediaData.length != 0) {
-                        fs.writeFileSync("./data/top-media-array-12grams", JSON.stringify(mediaData));
+                        fs.writeFileSync("../data/top-media-array-12grams", JSON.stringify(mediaData));
                         console.log('page media complete');
                     }
                     // repeat media import
-                    repeat()
+                    //repeat()
                 }
             });
         } catch (e) {
@@ -189,32 +189,33 @@ let pageMediaImport = function(data) {
     })
 }
 
-let repeat = function() {
+let repeat = function () {
     importAccountMedia()
-        .then(function(topMedia) {
+        .then(function (topMedia) {
             // sorting media by engagement score
-            topMedia.sort(function(a, b) {
+            topMedia.sort(function (a, b) {
                 return b.engagement - a.engagement;
             });
 
             if (topMedia.length != 0) {
-                mlabsConnect().once('open', function() {
+                mlabsConnect().once('open', function () {
                     console.log('Succesfully connected to mongolabs: saving media data...');
-                    // Remove old documents in collection
-                    Media.remove({}, function() {
+                    
+                    // drop media collection
+                    mongoose.connection.db.dropCollection('media', function (err, result) {
                         console.log('removed old media')
-                    })
+                    });
                     // Batch insert
                     Media.insertMany(topMedia)
-                        .then(function(result) {
+                        .then(function (result) {
                             if (result.length != 0) {
                                 console.log('Succesfully saved ' + result.length + ' documents... closing connection...')
-                                mongoose.connection.close(); // close connection
+                                if (topMedia.length - end <= 0) mongoose.connection.close(); // close connection
                                 // Second round for accuracy on front page
                                 pageMediaImport(mediaData);
                             }
                         })
-                        .catch(function(err) {
+                        .catch(function (err) {
                             console.log('oh shit');
                             console.log(err);
                         })

@@ -120,10 +120,10 @@ let importTopAccounts = function () {
 
     getAccounts().then(function (topAccounts) {
         if (topAccounts.length != 0) {
-            // Remove old documents in collection
-            Accounts.remove({}, function () {
+            // drop accounts collection
+            mongoose.connection.db.dropCollection('accounts', function(err, result) {
                 console.log('removed old accounts')
-            })
+            });
             // Batch insert
             Accounts.insertMany(topAccounts)
                 .then(function (result) {
