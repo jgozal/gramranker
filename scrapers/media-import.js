@@ -105,8 +105,9 @@ let getData = async.queue(function(user, progress) {
             try {
                 mediaData = mediaData.concat(cleanData(body.items));
             } catch (e) {
+                if (res) console.log(res.statusCode)
                 console.log(url)
-                console.log(e);
+                //console.log(e);
                 // retry request until it succeeds for at least 5 tries
                 if (retries[user] && retries[user] < 5) {
                     retries[user]++
