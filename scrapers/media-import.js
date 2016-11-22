@@ -1,3 +1,5 @@
+// cron job: while :; do node media-import.js; sleep 90; done
+
 'use strict'
 
 // Load packages
@@ -178,8 +180,6 @@ let pageMediaImport = function (data) {
                         fs.writeFileSync("../data/top-media-array-12grams", JSON.stringify(mediaData));
                         console.log('page media complete');
                     }
-                    // repeat media import
-                    repeat()
                 }
             });
         } catch (e) {
@@ -189,41 +189,41 @@ let pageMediaImport = function (data) {
     })
 }
 
-let repeat = function () {
-    importAccountMedia()
-        .then(function (topMedia) {
-            // sorting media by engagement score
-            topMedia.sort(function (a, b) {
-                return b.engagement - a.engagement;
-            });
 
-            if (topMedia.length != 0) {
-                mlabsConnect().once('open', function () {
-                    console.log('Succesfully connected to mongolabs: saving media data...');
+// start top media import
 
-                    // drop media collection
-                    mongoose.connection.db.dropCollection('media', function (err, result) {
-                        console.log('removed old media')
-                    });
-                    // Batch insert
-                    Media.insertMany(topMedia)
-                        .then(function (result) {
-                            if (result.length != 0) {
-                                console.log('Succesfully saved ' + result.length + ' documents... closing connection...')
-                                mongoose.connection.close(); // close connection
-                                // Second round for accuracy on front page
-                                pageMediaImport(mediaData);
-                            }
-                        })
-                        .catch(function (err) {
-                            console.log('oh shit');
-                            console.log(err);
-                        })
+importAccountMedia()
+    .then(function (topMedia) {
+        // sorting media by engagement score
+        topMedia.sort(function (a, b) {
+            return b.engagement - a.engagement;
+        });
+
+        if (topMedia.length != 0) {
+            mlabsConnect().once('open', function () {
+                console.log('Succesfully connected to mongolabs: saving media data...');
+
+                // drop media collection
+                mongoose.connection.db.dropCollection('media', function (err, result) {
+                    console.log('removed old media')
                 });
-            }
-        })
-}
+                // Batch insert
+                Media.insertMany(topMedia)
+                    .then(function (result) {
+                        if (result.length != 0) {
+                            console.log('Succesfully saved ' + result.length + ' documents... closing connection...')
+                            mongoose.connection.close(); // close connection
+                            // Second round for accuracy on front page
+                            pageMediaImport(mediaData);
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log('oh shit');
+                        console.log(err);
+                    })
+            });
+        }
+    })
 
-// start top media import and repeat
-repeat();
+
 
