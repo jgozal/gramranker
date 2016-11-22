@@ -210,7 +210,7 @@ let repeat = function () {
                         .then(function (result) {
                             if (result.length != 0) {
                                 console.log('Succesfully saved ' + result.length + ' documents... closing connection...')
-                                if (topMedia.length - end <= 0) mongoose.connection.close(); // close connection
+                                mongoose.connection.close(); // close connection
                                 // Second round for accuracy on front page
                                 pageMediaImport(mediaData);
                             }
