@@ -130,8 +130,12 @@
     text-decoration: none;
   }
   
-    .modal-open .modal,footer a:focus{
+  .modal-open .modal,footer a:focus{
     outline:none!important;
+  }
+
+  .modal-dialog{
+    width: 65%;
   }
   
    #mbody p {
