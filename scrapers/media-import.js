@@ -1,4 +1,4 @@
-// run on terminal: while :; do node media-import.js; sleep 60; done
+// run -> while :; do node media-import.js; sleep 60; done
 
 'use strict'
 
@@ -8,18 +8,12 @@ let request = require('request')
 let mongoose = require("mongoose");
 let async = require('async');
 
-let secrets = require('../secrets.json')
+let secrets = require('../secrets.json');
+let mlabsConnect = require('../api/mlabsConnect.js')();
 
 // Models
 let Account = require('../models/topAccounts.js');
 let Media = require('../models/topMedia.js');
-
-let options = {
-    server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
-    replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }
-};
-
-let mongodbUri = secrets.mongolab_creds;
 
 // Get current UTC timestamp
 
@@ -29,19 +23,10 @@ let accountCounter = 0;
 let mediaData = [];
 let retries = {}; // used to store request retries
 
-// Connect to mongolabs host
-
-let mlabsConnect = function () {
-    mongoose.connect(mongodbUri, options);
-    let conn = mongoose.connection;
-    conn.on('error', console.error.bind(console, 'connection error:'));
-    return conn;
-}
-
 // Read Accounts collection in db
 
 let topAccounts = new Promise(function (resolve, reject) {
-    mlabsConnect().once('open', function () {
+    mlabsConnect.once('open', function () {
         console.log('Succesfully connected to mongolabs: getting accounts data...');
         Account
             .find()
@@ -200,7 +185,7 @@ importAccountMedia()
         });
 
         if (topMedia.length != 0) {
-            mlabsConnect().once('open', function () {
+            mlabsConnect.once('open', function () {
                 console.log('Succesfully connected to mongolabs: saving media data...');
 
                 // drop media collection

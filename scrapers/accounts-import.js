@@ -12,7 +12,9 @@
 let request = require('request')
 let cheerio = require("cheerio");
 let mongoose = require("mongoose");
-let secrets = require('../secrets.json')
+
+let secrets = require('../secrets.json');
+let mlabsConnect = require('../api/mlabsConnect.js')();
 
 // Models
 let Accounts = require('../models/topAccounts.js');
@@ -20,20 +22,6 @@ let Accounts = require('../models/topAccounts.js');
 let urlCounter = 0;
 let urlArray = [];
 let topAccountsArray = [];
-
-// Connect to mongolabs
-
-let options = {
-    server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
-    replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }
-};
-
-let mongodbUri = secrets.mongolab_creds;
-
-mongoose.connect(mongodbUri, options);
-let conn = mongoose.connection;
-
-conn.on('error', console.error.bind(console, 'connection error:'));
 
 let parseHtml = function (html) {
     let $ = cheerio.load(html)
@@ -142,7 +130,7 @@ let importTopAccounts = function () {
 
 // once connection to db is open, start importing accounts
 
-conn.once('open', function () {
+mlabsConnect.once('open', function () {
     console.log('Succesfully connected to mongolabs');
     importTopAccounts();
 });
