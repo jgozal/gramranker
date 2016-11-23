@@ -1,6 +1,35 @@
 var fullArr;
 var ranking;
 
+function isURLReal(fullyQualifiedURL) {
+    var URL = encodeURIComponent(fullyQualifiedURL),
+        dfd = $.Deferred(),
+        checkURLPromise = $.getJSON('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22' + URL + '%22&format=json');
+
+    checkURLPromise
+        .done(function (response) {
+            // results should be null if the page 404s or the domain doesn't work
+            if (response.query.results) {
+                dfd.resolve(true);
+            } else {
+                dfd.reject(false);
+            }
+        })
+        .fail(function () {
+            dfd.reject('failed');
+        });
+    return dfd.promise();
+}
+
+// usage
+isURLReal('http://google.com')
+    .done(function (result) {
+        // yes
+    })
+    .fail(function (result) {
+        // no, or request failed
+    });
+
 function abbreviateNumber(value) {
     var newValue = value;
     if (value >= 1000) {
@@ -64,13 +93,11 @@ function getTop1000() {
 var loadTop1000 = function (rankingArr) {
     //clear results
     $('#results').html('');
+    var username = document.getElementById('username').value;
 
-    var username = document.getElementById('username').value
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("GET", "https://www.instagram.com/" + username, false);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
+    isURLReal('http://www.instagram.com/' + username)
+        .done(function (result) {
+            console.log(result)
             if (rankingArr.length === 0 && username != '') {
                 $('#results').fadeOut(100, function () {
                     $(this).html('<p>No posts from this user have made it to the top 1000 in the last 24 hours.</p>').fadeIn(100);
@@ -92,10 +119,14 @@ var loadTop1000 = function (rankingArr) {
 
                 })
             }
+        })
+        .fail(function (result) {
+            console.log(result)
+            $('#results').fadeOut(100, function () {
+                $(this).html("<p>Seems like that particular username doesn't exist. Check your spelling and make sure you aren't including an '@' in the username!<br><br>Example: 9gag, not @9gag. </p>").fadeIn(100);
+            })
+        });
 
-        }
-    }
-    xhr.send()
 }
 
 var loadModalContent = function (modal) {
