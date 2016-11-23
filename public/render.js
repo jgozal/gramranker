@@ -1,54 +1,21 @@
 var fullArr;
 var ranking;
 
-function isURLReal(fullyQualifiedURL) {
-    var URL = encodeURIComponent(fullyQualifiedURL),
-        dfd = $.Deferred(),
-        checkURLPromise = $.getJSON('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22' + URL + '%22&format=json');
+$(document).ready(function () {
+    // get top 12 Instagram posts on page load
+    (function getTop12() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/data", false);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                fullArr = (eval(JSON.parse(xhr.responseText)));
 
-    checkURLPromise
-        .done(function (response) {
-            // results should be null if the page 404s or the domain doesn't work
-            if (response.query.results) {
-                dfd.resolve(true);
-            } else {
-                dfd.reject(false);
             }
-        })
-        .fail(function () {
-            dfd.reject('failed');
-        });
-    return dfd.promise();
-}
-
-function abbreviateNumber(value) {
-    var newValue = value;
-    if (value >= 1000) {
-        var suffixes = ["", "k", "m", "b", "t"];
-        var suffixNum = Math.floor(("" + value).length / 3);
-        var shortValue = '';
-        for (var precision = 2; precision >= 1; precision--) {
-            shortValue = parseFloat((suffixNum != 0 ? (value / Math.pow(1000, suffixNum)) : value).toPrecision(precision));
-            var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g, '');
-            if (dotLessShortValue.length <= 2) { break; }
         }
-        if (shortValue % 1 != 0) shortNum = shortValue.toFixed(1);
-        newValue = shortValue + suffixes[suffixNum];
-    }
-    return newValue;
-}
+        xhr.send();
+    } ())
 
-(function getTop12() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/data", false);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            fullArr = (eval(JSON.parse(xhr.responseText)));
-
-        }
-    }
-    xhr.send();
-
+    // listen to Enter key 
     document.getElementById("username")
         .addEventListener("keyup", function (event) {
             event.preventDefault();
@@ -56,19 +23,22 @@ function abbreviateNumber(value) {
                 document.getElementById("send").click();
             }
         });
-} ())
 
-var doc = document.getElementsByClassName('flex-item-12gram');
-fullArr.forEach(function (user, index) {
-    if (user.type === "image") {
-        doc[index].parentElement.setAttribute('href', user.link);
-        doc[index].innerHTML += '<img src=' + user.durl + '><div class="overlay small"><p>By @' + user.user + '<br><span class="glyphicon">&#xe005;</span> ' + abbreviateNumber(user.likes) + '<span class="glyphicon">&#xe111;</span>' + abbreviateNumber(user.comments) + '</p></div>';
-    } else if (user.type === "video") {
-        doc[index].parentElement.setAttribute('href', user.link);
-        doc[index].innerHTML += '<video autoplay loop muted><source src=' + user.durl + ' type="video/mp4"></video><div class="overlay small"><p>By @' + user.user + '<br><span class="glyphicon">&#xe005;</span> ' + abbreviateNumber(user.likes) + '<span class="glyphicon">&#xe111;</span>' + abbreviateNumber(user.comments) + '</p></div>';
-    }
+    // decorate top Instagram posts
+    var top12 = document.getElementsByClassName('flex-item-12gram');
+    fullArr.forEach(function (user, index) {
+        if (user.type === "image") {
+            top12[index].parentElement.setAttribute('href', user.link);
+            top12[index].innerHTML += '<img src=' + user.durl + '><div class="overlay small"><p>By @' + user.user + '<br><span class="glyphicon">&#xe005;</span> ' + abbreviateNumber(user.likes) + '<span class="glyphicon">&#xe111;</span>' + abbreviateNumber(user.comments) + '</p></div>';
+        } else if (user.type === "video") {
+            top12[index].parentElement.setAttribute('href', user.link);
+            top12[index].innerHTML += '<video autoplay loop muted><source src=' + user.durl + ' type="video/mp4"></video><div class="overlay small"><p>By @' + user.user + '<br><span class="glyphicon">&#xe005;</span> ' + abbreviateNumber(user.likes) + '<span class="glyphicon">&#xe111;</span>' + abbreviateNumber(user.comments) + '</p></div>';
+        }
+    })
 })
 
+
+// check if user is in top 1000
 function getTop1000() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/top1000', true);
@@ -81,18 +51,22 @@ function getTop1000() {
     xhr.send(JSON.stringify({ username: document.getElementById('username').value.toLowerCase() }));
 }
 
+// render top 1000 results for a user
 var loadTop1000 = function (rankingArr) {
     //clear results
     $('#results').html('');
     var username = document.getElementById('username').value;
 
+    //check if user exists
     isURLReal('http://www.instagram.com/' + username)
         .done(function (result) {
             console.log(result)
+            // if no data
             if (rankingArr.length === 0 && username != '') {
                 $('#results').fadeOut(100, function () {
                     $(this).html('<p>No posts from this user have made it to the top 1000 in the last 24 hours.</p>').fadeIn(100);
                 })
+            // if empty username
             } else if (rankingArr.length === 0 && username == '') {
                 $('#results').fadeOut(100, function () {
                     $(this).html('<p>Please enter a username.</p>').fadeIn(100);
@@ -106,6 +80,7 @@ var loadTop1000 = function (rankingArr) {
                         $('#results').append('<p><a target="_blank" href="' + media.link + '">This</a> post has made it to the ' + media.ranking + ' so far!<br></p>').fadeIn(100);
                     })
 
+                    // share buttons
                     $(this).append('<ul class="share-buttons"><li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.gramranker.com&t=gramRanker" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="images/social/Facebook.svg"></a></li><li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fwww.gramranker.com&text=gramRanker:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Tweet"><img alt="Tweet" src="images/social/Twitter.svg"></a></li><li><a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Share on Google+"><img alt="Share on Google+" src="images/social/Google+.svg"></a></li><li><a href="http://www.reddit.com/submit?url=http%3A%2F%2Fwww.gramranker.com&title=gramRanker" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="images/social/Reddit.svg"></a></li><li><a href="mailto:?subject=gramRanker&body=Bringing%20you%20the%20most%20popular%20Instagram%20posts%20daily:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Send email"><img alt="Send email" src="images/social/Email.svg"></a></li></ul>').fadeIn(100);
 
                 })
@@ -120,6 +95,7 @@ var loadTop1000 = function (rankingArr) {
 
 }
 
+// FAQ and Privacy Policy modals
 var loadModalContent = function (modal) {
     if (modal === 'Privacy Policy') {
 

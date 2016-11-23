@@ -1,5 +1,5 @@
 node_modules
-secrets.json
+secrets.js
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

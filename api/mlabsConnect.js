@@ -1,5 +1,5 @@
 let mongoose = require('mongoose');
-let secrets = require('../secrets.json');
+let secrets = require('../secrets.js');
 
 // Connect to mongolabs host
 let options = {

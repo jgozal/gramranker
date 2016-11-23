@@ -8,7 +8,7 @@ let request = require('request')
 let mongoose = require("mongoose");
 let async = require('async');
 
-let secrets = require('../secrets.json');
+let secrets = require('../secrets.js');
 let mlabsConnect = require('../api/mlabsConnect.js')();
 
 // Models
@@ -78,7 +78,7 @@ let retryRequest = function (user) {
 
 let getData = async.queue(function (user, progress) {
 
-    let url = 'https://www.instagram.com/' + user + '/media/';
+    let url = secrets.ig_media(user);
 
     let options = {
         url: url,
