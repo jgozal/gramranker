@@ -21,15 +21,6 @@ function isURLReal(fullyQualifiedURL) {
     return dfd.promise();
 }
 
-// usage
-isURLReal('http://google.com')
-    .done(function (result) {
-        // yes
-    })
-    .fail(function (result) {
-        // no, or request failed
-    });
-
 function abbreviateNumber(value) {
     var newValue = value;
     if (value >= 1000) {
