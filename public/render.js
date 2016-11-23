@@ -1,19 +1,6 @@
 var fullArr;
 var ranking;
 
-/* Get UTC hour difference between now and start of the day 
-
-var now = new Date(),
-    startOfDay = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())),
-    unixTimestampStart = startOfDay / 1000,
-    unixTimestampNow = Math.floor((new Date()).getTime() / 1000),
-    diff = unixTimestampNow - unixTimestampStart,
-    hours_diff = Math.round(diff/3600); 
-
-document.getElementById('top12gram').innerHTML = '<p>Most popular posts in the past ' + hours_diff + ' hour/s</p>'
-    
-    */
-
 function abbreviateNumber(value) {
     var newValue = value;
     if (value >= 1000) {
@@ -79,15 +66,25 @@ var loadTop1000 = function (rankingArr) {
     document.getElementById('results').innerHTML = '';
 
     if (rankingArr.length === 0 && document.getElementById('username').value != '') {
-        document.getElementById('results').innerHTML = '<p>No posts from this user have made it to the top 1000 in the last 24 hours.</p>';
-    } else if (rankingArr.length === 0 && document.getElementById('username').value == '') {
-        document.getElementById('results').innerHTML = '<p>Please enter a username.</p>';
-    } else {
-        document.getElementById('results').innerHTML = '<p><b>' + rankingArr[0].user + ' has ' + rankingArr.length.toString() + ' post/s in the top 1000:</b></p><br>'
-        rankingArr.forEach(function (media) {
-            document.getElementById('results').innerHTML += '<p><a target="_blank" href="' + media.link + '">This</a> post has made it to the ' + media.ranking + ' so far!<br></p>';
+        $('#results').fadeOut(200, function () {
+            $(this).html('<p>No posts from this user have made it to the top 1000 in the last 24 hours.</p>').fadeIn(200);
         })
-        document.getElementById('results').innerHTML += '<ul class="share-buttons"><li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.gramranker.com&t=gramRanker" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="images/social/Facebook.svg"></a></li><li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fwww.gramranker.com&text=gramRanker:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Tweet"><img alt="Tweet" src="images/social/Twitter.svg"></a></li><li><a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Share on Google+"><img alt="Share on Google+" src="images/social/Google+.svg"></a></li><li><a href="http://www.reddit.com/submit?url=http%3A%2F%2Fwww.gramranker.com&title=gramRanker" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="images/social/Reddit.svg"></a></li><li><a href="mailto:?subject=gramRanker&body=Bringing%20you%20the%20most%20popular%20Instagram%20posts%20daily:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Send email"><img alt="Send email" src="images/social/Email.svg"></a></li></ul>';
+    } else if (rankingArr.length === 0 && document.getElementById('username').value == '') {
+        $('#results').fadeOut(200, function () {
+            $(this).html('<p>Please enter a username.</p>').fadeIn(200);
+        })
+    } else {
+        $('#results').fadeOut(200, function () {
+            $(this).append('<p><b>' + rankingArr[0].user + ' has ' + rankingArr.length.toString() + ' post/s in the top 1000:</b></p><br>').fadeIn(200);
+
+
+            rankingArr.forEach(function (media) {
+                $('#results').append('<p><a target="_blank" href="' + media.link + '">This</a> post has made it to the ' + media.ranking + ' so far!<br></p>').fadeIn(200);
+            })
+
+             $(this).append('<ul class="share-buttons"><li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.gramranker.com&t=gramRanker" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="images/social/Facebook.svg"></a></li><li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fwww.gramranker.com&text=gramRanker:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Tweet"><img alt="Tweet" src="images/social/Twitter.svg"></a></li><li><a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Share on Google+"><img alt="Share on Google+" src="images/social/Google+.svg"></a></li><li><a href="http://www.reddit.com/submit?url=http%3A%2F%2Fwww.gramranker.com&title=gramRanker" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="images/social/Reddit.svg"></a></li><li><a href="mailto:?subject=gramRanker&body=Bringing%20you%20the%20most%20popular%20Instagram%20posts%20daily:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Send email"><img alt="Send email" src="images/social/Email.svg"></a></li></ul>').fadeIn(200);
+
+        })
     }
 }
 

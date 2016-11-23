@@ -121,7 +121,7 @@ let getData = async.queue(function (user, progress) {
             }
             progress();
         })
-    }, 250)
+    }, 400)
 }, 1)
 
 // import all account media
@@ -177,7 +177,7 @@ let pageMediaImport = function (data) {
                     });
 
                     if (mediaData.length != 0) {
-                        fs.writeFileSync("../data/top-media-array-12grams", JSON.stringify(mediaData));
+                        fs.writeFileSync("../data/top-media-array-12grams", JSON.stringify(mediaData.slice(0, 12)));
                         console.log('page media complete');
                     }
                 }

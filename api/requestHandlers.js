@@ -39,7 +39,7 @@ let pageData = function (req, res) {
             res.send('something went wrong.');
             return;
         }
-        res.send(JSON.stringify(eval(JSON.parse(file)).slice(0, 12)));
+        res.send(JSON.stringify(eval(JSON.parse(file))));
     });
 }
 
