@@ -40,51 +40,20 @@ $(document).ready(function () {
 
 // check if user is in top 1000
 function getTop1000() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", '/top1000', true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            loadTop1000(JSON.parse(xhr.responseText));
-        }
-    }
-    xhr.send(JSON.stringify({ username: document.getElementById('username').value.toLowerCase() }));
-}
-
-// render top 1000 results for a user
-var loadTop1000 = function (rankingArr) {
-    //clear results
-    $('#results').html('');
-    var username = document.getElementById('username').value;
-
+    var username = document.getElementById('username').value.toLowerCase()
     //check if user exists
     isURLReal('http://www.instagram.com/' + username)
         .done(function (result) {
             console.log(result)
-            // if no data
-            if (rankingArr.length === 0 && username != '') {
-                $('#results').fadeOut(100, function () {
-                    $(this).html('<p>No posts from this user have made it to the top 1000 in the last 24 hours.</p>').fadeIn(100);
-                })
-            // if empty username
-            } else if (rankingArr.length === 0 && username == '') {
-                $('#results').fadeOut(100, function () {
-                    $(this).html('<p>Please enter a username.</p>').fadeIn(100);
-                })
-            } else {
-                $('#results').fadeOut(100, function () {
-                    $(this).append('<p><b>' + rankingArr[0].user + ' has ' + rankingArr.length.toString() + ' post/s in the top 1000:</b></p><br>').fadeIn(100);
-
-
-                    rankingArr.forEach(function (media) {
-                        $('#results').append('<p><a target="_blank" href="' + media.link + '">This</a> post has made it to the ' + media.ranking + ' so far!<br></p>').fadeIn(100);
-                    })
-
-                    // share buttons
-                    $(this).append('<ul class="share-buttons"><li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.gramranker.com&t=gramRanker" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="images/social/Facebook.svg"></a></li><li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fwww.gramranker.com&text=gramRanker:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Tweet"><img alt="Tweet" src="images/social/Twitter.svg"></a></li><li><a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Share on Google+"><img alt="Share on Google+" src="images/social/Google+.svg"></a></li><li><a href="http://www.reddit.com/submit?url=http%3A%2F%2Fwww.gramranker.com&title=gramRanker" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="images/social/Reddit.svg"></a></li><li><a href="mailto:?subject=gramRanker&body=Bringing%20you%20the%20most%20popular%20Instagram%20posts%20daily:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Send email"><img alt="Send email" src="images/social/Email.svg"></a></li></ul>').fadeIn(100);
-
-                })
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/top1000', true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    loadTop1000(JSON.parse(xhr.responseText),username);
+                }
             }
+            xhr.send(JSON.stringify({ username: username }));
         })
         .fail(function (result) {
             console.log(result)
@@ -92,6 +61,37 @@ var loadTop1000 = function (rankingArr) {
                 $(this).html("<p>Seems like that particular username doesn't exist. Check your spelling and make sure you aren't including an '@' in the username!<br><br>Example: 9gag, not @9gag. </p>").fadeIn(100);
             })
         });
+}
+
+// render top 1000 results for a user
+var loadTop1000 = function (rankingArr, username) {
+    //clear results
+    $('#results').html('');
+    // if no data
+    if (rankingArr.length === 0 && username != '') {
+        $('#results').fadeOut(100, function () {
+            $(this).html('<p>No posts from this user have made it to the top 1000 in the last 24 hours.</p>').fadeIn(100);
+        })
+        // if empty username
+    } else if (rankingArr.length === 0 && username == '') {
+        $('#results').fadeOut(100, function () {
+            $(this).html('<p>Please enter a username.</p>').fadeIn(100);
+        })
+    } else {
+        $('#results').fadeOut(100, function () {
+            $(this).append('<p><b>' + rankingArr[0].user + ' has ' + rankingArr.length.toString() + ' post/s in the top 1000:</b></p><br>').fadeIn(100);
+
+
+            rankingArr.forEach(function (media) {
+                $('#results').append('<p><a target="_blank" href="' + media.link + '">This</a> post has made it to the ' + media.ranking + ' so far!<br></p>').fadeIn(100);
+            })
+
+            // share buttons
+            $(this).append('<ul class="share-buttons"><li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.gramranker.com&t=gramRanker" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="images/social/Facebook.svg"></a></li><li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fwww.gramranker.com&text=gramRanker:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Tweet"><img alt="Tweet" src="images/social/Twitter.svg"></a></li><li><a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Share on Google+"><img alt="Share on Google+" src="images/social/Google+.svg"></a></li><li><a href="http://www.reddit.com/submit?url=http%3A%2F%2Fwww.gramranker.com&title=gramRanker" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="images/social/Reddit.svg"></a></li><li><a href="mailto:?subject=gramRanker&body=Bringing%20you%20the%20most%20popular%20Instagram%20posts%20daily:%20http%3A%2F%2Fwww.gramranker.com" target="_blank" title="Send email"><img alt="Send email" src="images/social/Email.svg"></a></li></ul>').fadeIn(100);
+
+        })
+    }
+
 
 }
 
