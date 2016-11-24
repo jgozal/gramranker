@@ -13,6 +13,7 @@
     "express": "~4.13.4",
     "mongoose": "^4.6.5",
     "morgan": "^1.7.0",
-    "request": "latest"
+    "request": "latest",
+    "serve-favicon": "^2.3.2"
   }
 }
