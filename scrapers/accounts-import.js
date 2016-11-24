@@ -8,7 +8,7 @@ let cheerio = require("cheerio");
 let mongoose = require("mongoose");
 
 let secrets = require('../secrets.js');
-let mlabsConnect = require('../api/mlabsConnect.js')();
+let mlabsConnect = require('../api/mlabsConnect.js');
 
 // Models
 let Accounts = require('../models/topAccounts.js');
@@ -121,7 +121,7 @@ let importTopAccounts = function () {
 
 // once connection to db is open, start importing accounts
 
-mlabsConnect.once('open', function () {
+mlabsConnect().once('open', function () {
     console.log('Succesfully connected to mongolabs');
     importTopAccounts();
 });

@@ -8,7 +8,7 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 
 let routes = require('./api/routes');
-let mlabsConnect = require('./api/mlabsConnect.js')();
+let mlabsConnect = require('./api/mlabsConnect.js');
 
 let app = express();
 let port = process.env.PORT || 8080;
@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 
-mlabsConnect.once('open', function () {
+mlabsConnect().once('open', function () {
     console.log('Succesfully connected to mongolabs');
     app.listen(port, function () {
         console.log('Server running on port ' + port);

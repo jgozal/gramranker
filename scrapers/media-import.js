@@ -9,7 +9,7 @@ let mongoose = require("mongoose");
 let async = require('async');
 
 let secrets = require('../secrets.js');
-let mlabsConnect = require('../api/mlabsConnect.js')();
+let mlabsConnect = require('../api/mlabsConnect.js');
 
 // Models
 let Account = require('../models/topAccounts.js');
@@ -26,7 +26,7 @@ let retries = {}; // used to store request retries
 // Read Accounts collection in db
 
 let topAccounts = new Promise(function (resolve, reject) {
-    mlabsConnect.once('open', function () {
+    mlabsConnect().once('open', function () {
         console.log('Succesfully connected to mongolabs: getting accounts data...');
         Account
             .find()
@@ -185,7 +185,7 @@ importAccountMedia()
         });
 
         if (topMedia.length != 0) {
-            mlabsConnect.once('open', function () {
+            mlabsConnect().once('open', function () {
                 console.log('Succesfully connected to mongolabs: saving media data...');
 
                 // drop media collection
