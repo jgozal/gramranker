@@ -207,6 +207,8 @@ importAccountMedia()
                         console.log(err);
                     })
             });
+        } else {
+            console.log('hum... no data... O.o');
         }
     })
 

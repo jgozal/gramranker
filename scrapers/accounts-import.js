@@ -98,7 +98,7 @@ let importTopAccounts = function () {
     getAccounts().then(function (topAccounts) {
         if (topAccounts.length != 0) {
             // drop accounts collection
-            mongoose.connection.db.dropCollection('accounts', function(err, result) {
+            mongoose.connection.db.dropCollection('accounts', function (err, result) {
                 console.log('removed old accounts')
             });
             // Batch insert
@@ -113,6 +113,8 @@ let importTopAccounts = function () {
                     console.log('oh shit');
                     console.log(err);
                 })
+        } else {
+            console.log('hum... no data... O.o');
         }
     })
 }
