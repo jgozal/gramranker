@@ -1,5 +1,4 @@
-var fullArr;
-var ranking;
+var top12Arr;
 
 $(document).ready(function () {
     // get top 12 Instagram posts on page load
@@ -8,7 +7,7 @@ $(document).ready(function () {
         xhr.open("GET", "/data", false);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                fullArr = (eval(JSON.parse(xhr.responseText)));
+                top12Arr = (eval(JSON.parse(xhr.responseText)));
 
             }
         }
@@ -26,7 +25,7 @@ $(document).ready(function () {
 
     // decorate top Instagram posts
     var top12 = $('.flex-item-12gram');
-    fullArr.forEach(function (user, index) {
+    top12Arr.forEach(function (user, index) {
         if (user.type === "image") {
             top12[index].parentElement.setAttribute('href', user.link);
             top12[index].innerHTML += '<img src=' + user.durl + '><div class="overlay small"><p>By @' + user.user + '<br><span class="glyphicon">&#xe005;</span> ' + abbreviateNumber(user.likes) + '<span class="glyphicon">&#xe111;</span>' + abbreviateNumber(user.comments) + '</p></div>';
