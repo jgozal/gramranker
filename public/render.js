@@ -72,7 +72,7 @@ var loadTop1000 = function (rankingArr, username) {
 
             $(this).html('<p>No posts from this user have made it to the top 1000 in the last 24 hours.</p>').fadeIn(100);
 
-            // if empty username
+        // if empty username
         } else if (rankingArr.length === 0 && username == '') {
 
             $(this).html('<p>Please enter a username.</p>').fadeIn(100);
